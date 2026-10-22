@@ -1,0 +1,5 @@
+-- BASES DE DATOS APLICADA
+-- Comision 5600 - Grupo 05
+-- Integrantes: 
+-- Gonzalez Esteban Gabriel 42888511
+------------------------------------------
