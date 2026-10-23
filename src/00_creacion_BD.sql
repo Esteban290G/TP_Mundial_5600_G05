@@ -4,7 +4,6 @@
 -- Integrantes: 
 -- Gonzalez Esteban Gabriel 42888511
 -- Vázquez Nahuel Domiciano 35756270
---
 -- Creacion de la base de datos --
 ------------------------------------------
 
