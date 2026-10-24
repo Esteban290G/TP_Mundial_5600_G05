@@ -90,9 +90,77 @@ CREATE TABLE Participantes.Seleccion (
 
 	CONSTRAINT PK_Seleccion PRIMARY KEY (id_seleccion),
 	CONSTRAINT UQ_Seleccion_Nombre UNIQUE (nombre_seleccion),
-	CONSTRAINT FK_Seleccion_Pais FOREIGN KEY(id_pais) REFERENCES Participantes.Pais(id_pais),
+	CONSTRAINT FK_Seleccion_Pais FOREIGN KEY (id_pais) REFERENCES Participantes.Pais(id_pais),
 	CONSTRAINT UQ_Seleccion_Pais UNIQUE (id_pais),
-	CONSTRAINT FK_Seleccion_Confederacion FOREIGN KEY(id_confederacion) REFERENCES Participantes.Confederacion(id_confederacion),
-	CONSTRAINT FK_Seleccion_Grupo FOREIGN KEY(id_grupo) REFERENCES Torneo.Grupo(id_grupo)
+	CONSTRAINT FK_Seleccion_Confederacion FOREIGN KEY (id_confederacion) REFERENCES Participantes.Confederacion(id_confederacion),
+	CONSTRAINT FK_Seleccion_Grupo FOREIGN KEY (id_grupo) REFERENCES Torneo.Grupo(id_grupo)
+);
+GO
+
+CREATE TABLE Participantes.Integrante_cuerpo_tecnico (
+	id_integrante_ct INT IDENTITY(1,1),
+	id_seleccion INT NOT NULL,
+	nombre VARCHAR(30) NOT NULL,
+	apellido VARCHAR(30) NOT NULL,
+	cargo_rol VARCHAR(30) NOT NULL,
+
+	CONSTRAINT PK_Integrante PRIMARY KEY (id_integrante_ct),
+	CONSTRAINT FK_Integrante_Seleccion FOREIGN KEY (id_seleccion) REFERENCES Participantes.Seleccion(id_seleccion),
+	CONSTRAINT UQ_Integrante_Seleccion UNIQUE (id_seleccion, nombre, apellido, cargo_rol)
+);
+GO
+
+CREATE TABLE Participantes.Club_origen (
+	id_club INT IDENTITY(1,1),
+	nombre VARCHAR(50) NOT NULL,
+	id_pais_club INT NOT NULL,
+
+	CONSTRAINT PK_Club PRIMARY KEY (id_club),
+	CONSTRAINT FK_Club_Pais FOREIGN KEY (id_pais_club) REFERENCES Participantes.Pais(id_pais),
+	CONSTRAINT UQ_Club_Pais_Nombre UNIQUE (id_pais_club, nombre)
+);
+GO
+
+CREATE TABLE Participantes.Posicion (
+	id_posicion INT IDENTITY(1,1),
+	nombre_posicion VARCHAR(30) NOT NULL,
+
+	CONSTRAINT PK_posicion PRIMARY KEY (id_posicion),
+	CONSTRAINT UQ_Posicion_Nombre UNIQUE (nombre_posicion)
+);
+GO
+
+CREATE TABLE Participantes.Jugador (
+	id_jugador INT IDENTITY(1,1),
+	nombre VARCHAR(30) NOT NULL,
+	apellido VARCHAR(30) NOT NULL,
+	fecha_nacimiento DATE NOT NULL,
+	id_pais_nacimiento INT NOT NULL,
+	id_posicion_habitual INT NOT NULL,
+	id_club_origen INT NOT NULL,
+
+	CONSTRAINT PK_Jugador PRIMARY KEY (id_jugador),
+	CONSTRAINT CK_Jugador_Nacimiento CHECK (fecha_nacimiento <= GETDATE()),
+	CONSTRAINT FK_Jugador_Pais FOREIGN KEY (id_pais_nacimiento) REFERENCES Participantes.Pais(id_pais),
+	CONSTRAINT FK_Jugador_Posicion FOREIGN KEY (id_posicion_habitual) REFERENCES Participantes.Posicion(id_posicion),
+	CONSTRAINT FK_Jugador_Club FOREIGN KEY (id_club_origen) REFERENCES Participantes.Club_origen(id_club),
+	CONSTRAINT UQ_Jugador UNIQUE (nombre, apellido, fecha_nacimiento, id_pais_nacimiento)
+);
+GO
+
+CREATE TABLE Participantes.Convocatoria (
+	id_convocatoria INT IDENTITY(1,1),
+	id_seleccion INT NOT NULL,
+	id_jugador INT NOT NULL,
+	estado_convocatoria VARCHAR(30) NOT NULL,
+	fecha_alta_convocatoria DATE NOT NULL,
+	dorsal TINYINT NOT NULL,
+
+	CONSTRAINT PK_Convocatoria PRIMARY KEY (id_convocatoria),
+	CONSTRAINT FK_Convocatoria_Seleccion FOREIGN KEY (id_seleccion) REFERENCES Participantes.Seleccion(id_seleccion),
+	CONSTRAINT FK_Convocatoria_Jugador FOREIGN KEY (id_jugador) REFERENCES Participantes.Jugador(id_jugador),
+	CONSTRAINT UQ_Convocatoria_Jugador UNIQUE (id_jugador),
+	CONSTRAINT UQ_Convocatoria_Dorsal UNIQUE (id_seleccion, dorsal),
+	CONSTRAINT CK_Convocatoria_Dorsal CHECK (dorsal BETWEEN 1 AND 26)
 );
 GO
