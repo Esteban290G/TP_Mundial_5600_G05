@@ -10,6 +10,30 @@
 USE COM5600_G05;
 GO
 
+------- Eliminar tablas existentes -------
+
+---------- Schema Participantes ----------
+DROP TABLE IF EXISTS Participantes.Idioma_arbitro;
+DROP TABLE IF EXISTS Participantes.Novedad_convocatoria;
+DROP TABLE IF EXISTS Participantes.Convocatoria;
+DROP TABLE IF EXISTS Participantes.Jugador;
+DROP TABLE IF EXISTS Participantes.Integrante_cuerpo_tecnico;
+DROP TABLE IF EXISTS Participantes.Seleccion;
+DROP TABLE IF EXISTS Participantes.Arbitro;
+DROP TABLE IF EXISTS Participantes.Rol_arbitro;
+DROP TABLE IF EXISTS Participantes.Idioma;
+DROP TABLE IF EXISTS Participantes.Categoria_arbitro;
+DROP TABLE IF EXISTS Participantes.Posicion;
+DROP TABLE IF EXISTS Participantes.Club_origen;
+DROP TABLE IF EXISTS Participantes.Confederacion;
+DROP TABLE IF EXISTS Participantes.Ciudad;
+DROP TABLE IF EXISTS Participantes.Feriado_pais;
+DROP TABLE IF EXISTS Participantes.Pais;
+DROP TABLE IF EXISTS Participantes.Cotizacion_moneda;
+DROP TABLE IF EXISTS Participantes.Moneda;
+GO
+------------------------------------------
+
 -- Tablas pertenecientes al schema Torneo --
 
 -- Tablas pertenecientes al schema Participantes --
@@ -162,5 +186,73 @@ CREATE TABLE Participantes.Convocatoria (
 	CONSTRAINT UQ_Convocatoria_Jugador UNIQUE (id_jugador),
 	CONSTRAINT UQ_Convocatoria_Dorsal UNIQUE (id_seleccion, dorsal),
 	CONSTRAINT CK_Convocatoria_Dorsal CHECK (dorsal BETWEEN 1 AND 26)
+);
+GO
+
+CREATE TABLE Participantes.Novedad_convocatoria (
+	id_novedad INT IDENTITY(1,1),
+	id_convocatoria_baja INT NOT NULL,
+	id_convocatoria_alta INT NOT NULL,
+	motivo_cambio VARCHAR(50) NOT NULL,
+	fecha_cambio DATE NOT NULL,
+	observaciones VARCHAR(50) NULL,
+
+	CONSTRAINT PK_Novedad PRIMARY KEY(id_novedad),
+	CONSTRAINT FK_Novedad_convocatoria_baja FOREIGN KEY (id_convocatoria_baja) REFERENCES Participantes.Convocatoria(id_convocatoria),
+	CONSTRAINT FK_Novedad_convocatoria_alta FOREIGN KEY (id_convocatoria_alta) REFERENCES Participantes.Convocatoria(id_convocatoria),
+	CONSTRAINT CK_Novedad_Distintos CHECK (id_convocatoria_baja <> id_convocatoria_alta)
+);
+GO
+
+CREATE TABLE Participantes.Categoria_arbitro (
+	id_categoria INT IDENTITY(1,1),
+	descripcion VARCHAR(50) NOT NULL,
+
+	CONSTRAINT PK_Categoria_Arbitro PRIMARY KEY (id_categoria),
+	CONSTRAINT UQ_Categoria_Arbitro_Descripcion UNIQUE (descripcion)
+);
+GO
+
+CREATE TABLE Participantes.Arbitro (
+	id_arbitro INT IDENTITY(1,1),
+	id_pais INT NOT NULL,
+	id_categoria INT NOT NULL,
+	nombre VARCHAR(50) NOT NULL,
+	apellido VARCHAR(50) NOT NULL,
+	fecha_nacimiento DATE NOT NULL,
+
+	CONSTRAINT PK_Arbitro PRIMARY KEY (id_arbitro),
+	CONSTRAINT FK_Arbitro_Pais FOREIGN KEY (id_pais) REFERENCES Participantes.Pais(id_pais),
+	CONSTRAINT FK_Arbitro_Categoria FOREIGN KEY (id_categoria) REFERENCES Participantes.Categoria_arbitro(id_categoria),
+	CONSTRAINT UQ_Arbitro UNIQUE (nombre, apellido, fecha_nacimiento, id_pais),
+	CONSTRAINT CK_Arbitro_Nacimiento CHECK (fecha_nacimiento <= GETDATE())
+);
+GO
+
+CREATE TABLE Participantes.Rol_arbitro (
+	id_rol_arbitro INT IDENTITY(1,1),
+	descripcion VARCHAR(50) NOT NULL,
+
+	CONSTRAINT PK_Rol_Arbitro PRIMARY KEY (id_rol_arbitro),
+	CONSTRAINT UQ_Rol_Arbitro_Descripcion UNIQUE (descripcion)
+);
+GO
+
+CREATE TABLE Participantes.Idioma (
+	id_idioma INT IDENTITY(1,1),
+	nombre VARCHAR(50) NOT NULL,
+
+	CONSTRAINT PK_Idioma PRIMARY KEY (id_idioma),
+	CONSTRAINT UQ_Idioma_Nombre UNIQUE (nombre)
+);
+GO
+
+CREATE TABLE Participantes.Idioma_arbitro (
+	id_arbitro INT NOT NULL,
+	id_idioma INT NOT NULL,
+
+	CONSTRAINT PK_Idioma_Arbitro PRIMARY KEY (id_arbitro, id_idioma),
+	CONSTRAINT FK_IdiomaArbitro_Arbitro FOREIGN KEY (id_arbitro) REFERENCES Participantes.Arbitro (id_arbitro),
+	CONSTRAINT FK_IdiomaArbitro_Idioma FOREIGN KEY (id_idioma) REFERENCES Participantes.Idioma (id_idioma)
 );
 GO
