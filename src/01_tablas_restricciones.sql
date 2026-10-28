@@ -17,25 +17,32 @@ set nocount on
 DROP TABLE IF EXISTS Torneo.Sustitucion;
 DROP TABLE IF EXISTS Torneo.Informe_post_partido;
 DROP TABLE IF EXISTS Torneo.Detalle_alineacion_jugador;
+DROP TABLE IF EXISTS Publicidad.Exhibicion_publicidad_partido;
 DROP TABLE IF EXISTS Torneo.Suspension_jugador;
 DROP TABLE IF EXISTS Torneo.Tarjeta;
 DROP TABLE IF EXISTS Torneo.Gol;
 DROP TABLE IF EXISTS Torneo.Alineacion_partido;
 DROP TABLE IF EXISTS Torneo.Designacion_arbitral;
+DROP TABLE IF EXISTS Publicidad.Pieza_publicitaria;
+DROP TABLE IF EXISTS Publicidad.Mercado_interes_campania;
 DROP TABLE IF EXISTS Torneo.Partido;
 DROP TABLE IF EXISTS Participantes.Novedad_convocatoria;
+DROP TABLE IF EXISTS Publicidad.Campania_publicitaria;
 DROP TABLE IF EXISTS Participantes.Convocatoria;
 DROP TABLE IF EXISTS Participantes.Integrante_cuerpo_tecnico;
 DROP TABLE IF EXISTS Participantes.Jugador;
 DROP TABLE IF EXISTS Torneo.Sede;
+DROP TABLE IF EXISTS Publicidad.Anunciante;
 DROP TABLE IF EXISTS Participantes.Idioma_arbitro;
 DROP TABLE IF EXISTS Participantes.Seleccion;
 DROP TABLE IF EXISTS Participantes.Arbitro;
 DROP TABLE IF EXISTS Participantes.Club_origen;
 DROP TABLE IF EXISTS Participantes.Ciudad;
 DROP TABLE IF EXISTS Participantes.Feriado_pais;
+DROP TABLE IF EXISTS Torneo.Parametros_suspension;
 DROP TABLE IF EXISTS Participantes.Pais;
 DROP TABLE IF EXISTS Participantes.Cotizacion_moneda;
+DROP TABLE IF EXISTS Publicidad.Franja_horaria_tarifa;
 DROP TABLE IF EXISTS Torneo.Motivo_tarjeta;
 DROP TABLE IF EXISTS Torneo.Tipo_tarjeta;
 DROP TABLE IF EXISTS Torneo.Periodo_partido;
@@ -184,6 +191,19 @@ CREATE TABLE Torneo.Motivo_tarjeta (
 );
 GO
 
+CREATE TABLE Publicidad.Franja_horaria_tarifa (
+    id_franja INT IDENTITY(1,1),
+    descripcion_franja VARCHAR(50) NOT NULL,
+    hora_inicio_local TIME(0) NOT NULL,
+    hora_fin_local TIME(0) NOT NULL,
+    tarifa_base_usd DECIMAL(18,2) NOT NULL,
+
+    CONSTRAINT PK_Franja_Horaria PRIMARY KEY (id_franja),
+    CONSTRAINT UQ_Franja_Descripcion UNIQUE (descripcion_franja),
+    CONSTRAINT CK_Franja_Tarifa CHECK (tarifa_base_usd >= 0)
+);
+GO
+
 ------------------------------------------
 
 CREATE TABLE Participantes.Cotizacion_moneda (
@@ -210,6 +230,20 @@ CREATE TABLE Participantes.Pais (
     CONSTRAINT FK_Pais_Moneda FOREIGN KEY (codigo_moneda) REFERENCES Participantes.Moneda(codigo_moneda),
     CONSTRAINT UQ_Pais_CodigoISO UNIQUE (codigo_iso),
     CONSTRAINT CK_Pais_PBI CHECK (pbi_per_capita >= 0)
+);
+GO
+
+CREATE TABLE Torneo.Parametros_suspension (
+    id_parametro INT IDENTITY(1,1),
+    id_fase_limpieza_amarillas INT NOT NULL,
+    fechas_suspension_roja_directa TINYINT NOT NULL,
+    fechas_suspension_doble_amarilla TINYINT NOT NULL,
+    activo BIT NOT NULL,
+
+    CONSTRAINT PK_Parametros_Suspension PRIMARY KEY (id_parametro),
+    CONSTRAINT FK_Parametros_Fase_Limpieza FOREIGN KEY (id_fase_limpieza_amarillas) REFERENCES Torneo.Fase(id_fase),
+    CONSTRAINT CK_Parametros_Roja CHECK (fechas_suspension_roja_directa > 0),
+    CONSTRAINT CK_Parametros_Doble_Amarilla CHECK (fechas_suspension_doble_amarilla > 0)
 );
 GO
 
@@ -289,6 +323,19 @@ CREATE TABLE Participantes.Idioma_arbitro (
 );
 GO
 
+CREATE TABLE Publicidad.Anunciante (
+	id_anunciante INT IDENTITY(1,1),
+	nombre_anunciante VARCHAR(50) NOT NULL,
+	id_pais_origen INT NOT NULL,
+	identificacion_fiscal VARCHAR(50) NOT NULL,
+
+	CONSTRAINT PK_Anunciante PRIMARY KEY (id_anunciante),
+	CONSTRAINT FK_Anunciante_Pais FOREIGN KEY (id_pais_origen) REFERENCES Participantes.Pais(id_pais),
+	CONSTRAINT UQ_Anunciante_Nombre UNIQUE (nombre_anunciante),
+	CONSTRAINT UQ_Anunciante_Fiscal UNIQUE (identificacion_fiscal)
+);
+GO
+
 CREATE TABLE Torneo.Sede (
 	id_sede INT IDENTITY(1,1),
 	id_ciudad INT NOT NULL,
@@ -353,6 +400,21 @@ CREATE TABLE Participantes.Convocatoria (
 );
 GO
 
+CREATE TABLE Publicidad.Campania_publicitaria (
+    id_campania INT IDENTITY(1,1),
+    id_anunciante INT NOT NULL,
+    nombre_campania VARCHAR(100) NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    presupuesto DECIMAL(18,2) NOT NULL,
+
+    CONSTRAINT PK_Campania PRIMARY KEY (id_campania),
+    CONSTRAINT FK_Campania_Anunciante FOREIGN KEY (id_anunciante) REFERENCES Publicidad.Anunciante(id_anunciante),
+    CONSTRAINT CK_Campania_Fechas CHECK (fecha_fin >= fecha_inicio),
+    CONSTRAINT CK_Campania_Presupuesto CHECK (presupuesto > 0)
+);
+GO
+
 CREATE TABLE Participantes.Novedad_convocatoria (
 	id_novedad INT IDENTITY(1,1),
 	id_convocatoria_baja INT NOT NULL,
@@ -390,6 +452,32 @@ CREATE TABLE Torneo.Partido (
 	CONSTRAINT CK_Partido_Distintos CHECK (id_seleccion_local <> id_seleccion_visitante),
 	CONSTRAINT UQ_Partido_Fase_Equipos UNIQUE (id_fase, id_seleccion_local, id_seleccion_visitante),
 	CONSTRAINT UQ_Partido_Sede_Horario UNIQUE (id_sede, fecha_hora_local)
+);
+GO
+
+CREATE TABLE Publicidad.Mercado_interes_campania (
+	id_campania INT NOT NULL,
+	id_pais INT NOT NULL,
+
+	CONSTRAINT PK_Mercado_Interes PRIMARY KEY (id_campania,id_pais),
+	CONSTRAINT FK_Mercado_Campania FOREIGN KEY (id_campania) REFERENCES Publicidad.Campania_publicitaria(id_campania),
+	CONSTRAINT FK_Mercado_Pais FOREIGN KEY (id_pais) REFERENCES Participantes.Pais(id_pais)
+);
+GO
+
+CREATE TABLE Publicidad.Pieza_publicitaria (
+	id_pieza INT IDENTITY(1,1),
+	id_campania INT NOT NULL,
+	id_idioma INT NOT NULL,
+	nombre_pieza VARCHAR(50) NOT NULL,
+	duracion_segundos SMALLINT NOT NULL,
+	url_contenido_media VARCHAR(255) NOT NULL,
+
+	CONSTRAINT PK_Pieza_Publicitaria PRIMARY KEY (id_pieza),
+	CONSTRAINT FK_Pieza_Campania FOREIGN KEY (id_campania) REFERENCES Publicidad.Campania_publicitaria(id_campania),
+	CONSTRAINT FK_Pieza_Idioma FOREIGN KEY (id_idioma) REFERENCES Participantes.Idioma(id_idioma),
+	CONSTRAINT UQ_Pieza_Campania_Nombre UNIQUE (id_campania, nombre_pieza),
+	CONSTRAINT CK_Pieza_Duracion CHECK (duracion_segundos > 0)
 );
 GO
 
@@ -469,6 +557,23 @@ CREATE TABLE Torneo.Suspension_jugador (
 	CONSTRAINT FK_Suspension_Partido_Origen FOREIGN KEY (id_partido_origen) REFERENCES Torneo.Partido(id_partido),
 	CONSTRAINT FK_Suspension_Partido_Sancion FOREIGN KEY (id_partido_sancion) REFERENCES Torneo.Partido(id_partido),
 	CONSTRAINT CK_Suspension_Partidos_Distintos CHECK (id_partido_origen <> ISNULL(id_partido_sancion, 0))
+);
+GO
+
+CREATE TABLE Publicidad.Exhibicion_publicidad_partido (
+    id_partido INT NOT NULL,
+    numero_espacio TINYINT NOT NULL,
+    id_pieza INT NOT NULL,
+    tarifa_aplicada_usd DECIMAL(18,2) NOT NULL,
+    id_franja INT NOT NULL,
+    fecha_hora_exhibicion DATETIME NOT NULL,
+
+    CONSTRAINT PK_Exhibicion_Publicidad PRIMARY KEY (id_partido, numero_espacio),
+    CONSTRAINT FK_Exhibicion_Partido FOREIGN KEY (id_partido) REFERENCES Torneo.Partido(id_partido),
+    CONSTRAINT FK_Exhibicion_Pieza FOREIGN KEY (id_pieza) REFERENCES Publicidad.Pieza_publicitaria(id_pieza),
+    CONSTRAINT FK_Exhibicion_Franja FOREIGN KEY (id_franja) REFERENCES Publicidad.Franja_horaria_tarifa(id_franja),
+    CONSTRAINT CK_Exhibicion_Limite_Espacios CHECK (numero_espacio BETWEEN 1 AND 4),
+    CONSTRAINT CK_Exhibicion_Tarifa CHECK (tarifa_aplicada_usd >= 0)
 );
 GO
 
