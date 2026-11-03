@@ -637,24 +637,32 @@ EXEC Publicidad.Alta_Campania_publicitaria
 GO
 
 ------------------------------------------
+------------------------------------------
 -- PRUEBAS: Torneo.Alta_Partido
 
 -- registros necesarios:
 EXEC Participantes.Alta_Moneda @codigo_moneda = 'BRL', @nombre_moneda = 'Real Brasileño';
 EXEC Participantes.Alta_Pais @codigo_moneda = 'BRL', @nombre = 'Brasil', @codigo_iso = 'BRA', @pbi_per_capita = 8900.50;
-EXEC Participantes.Alta_Seleccion @nombre_seleccion = 'Selección de Brasil', @id_pais = 2, @id_confederacion = 1, @id_grupo = 1;
+DECLARE @idPaisBra INT = IDENT_CURRENT('Participantes.Pais');
+EXEC Participantes.Alta_Seleccion @nombre_seleccion = 'Selección de Brasil', @id_pais = @idPaisBra, @id_confederacion = 1, @id_grupo = 1;
+DECLARE @idSelBra INT = IDENT_CURRENT('Participantes.Seleccion');
 
 EXEC Participantes.Alta_Moneda @codigo_moneda = 'UYU', @nombre_moneda = 'Peso Uruguayo';
 EXEC Participantes.Alta_Pais @codigo_moneda = 'UYU', @nombre = 'Uruguay', @codigo_iso = 'URY', @pbi_per_capita = 17000.00;
-EXEC Participantes.Alta_Seleccion @nombre_seleccion = 'Selección de Uruguay', @id_pais = 3, @id_confederacion = 1, @id_grupo = 1;
+DECLARE @idPaisUru INT = IDENT_CURRENT('Participantes.Pais');
+EXEC Participantes.Alta_Seleccion @nombre_seleccion = 'Selección de Uruguay', @id_pais = @idPaisUru, @id_confederacion = 1, @id_grupo = 1;
+DECLARE @idSelUru INT = IDENT_CURRENT('Participantes.Seleccion');
 GO
 
--- Test 01: Caso de éxito. Partido 1 (Arg vs Bra).
+-- Test 01: Caso de éxito.
+DECLARE @idArg INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección Argentina');
+DECLARE @idBra INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección de Brasil');
+
 EXEC Torneo.Alta_Partido
     @id_sede = 1,
     @id_fase = 1,
-    @id_seleccion_local = 1, 
-    @id_seleccion_visitante = 2,
+    @id_seleccion_local = @idArg, 
+    @id_seleccion_visitante = @idBra,
     @id_importacion_origen = 1,
     @fecha_hora_local = '20260615 17:00:00',
     @asistencia_publico = 80000,
@@ -663,15 +671,15 @@ EXEC Torneo.Alta_Partido
     @UTC = '20260615 20:00:00';
 GO
 
-SELECT * FROM Torneo.Partido;
-GO
+-- Test 02: Caso de éxito con datos nulos.
+DECLARE @idArg INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección Argentina');
+DECLARE @idUru INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección de Uruguay');
 
--- Test 02: Caso de éxito con datos nulos. Partido 2 (Arg vs Uru).
 EXEC Torneo.Alta_Partido
     @id_sede = 1,
     @id_fase = 1,
-    @id_seleccion_local = 1, 
-    @id_seleccion_visitante = 3,
+    @id_seleccion_local = @idArg, 
+    @id_seleccion_visitante = @idUru,
     @id_importacion_origen = 1,
     @fecha_hora_local = '20260618 17:00:00',
     @asistencia_publico = NULL, 
@@ -680,15 +688,15 @@ EXEC Torneo.Alta_Partido
     @UTC = '20260618 20:00:00';
 GO
 
-SELECT * FROM Torneo.Partido;
-GO
+-- Test 03: Asistencia excede capacidad.
+DECLARE @idBra INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección de Brasil');
+DECLARE @idUru INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección de Uruguay');
 
--- Test 03: Asistencia excede capacidad. (Usa Bra vs Uru).
 EXEC Torneo.Alta_Partido
     @id_sede = 1,
     @id_fase = 1,
-    @id_seleccion_local = 2, 
-    @id_seleccion_visitante = 3,
+    @id_seleccion_local = @idBra, 
+    @id_seleccion_visitante = @idUru,
     @id_importacion_origen = 1,
     @fecha_hora_local = '20260622 17:00:00',
     @asistencia_publico = 90000,
@@ -696,6 +704,7 @@ EXEC Torneo.Alta_Partido
     @goles_visitante = 0,
     @UTC = '20260622 20:00:00';
 GO
+
 
 ------------------------------------------
 -- PRUEBAS: Publicidad.Alta_Mercado_interes_campania
@@ -748,81 +757,41 @@ GO
 ------------------------------------------
 -- PRUEBAS: Torneo.Alta_Alineacion_partido
 
--- Test 01: Caso de éxito (Argentina en el partido 1).
+-- Test 01: Caso de éxito.
+DECLARE @idArg INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección Argentina');
+
 EXEC Torneo.Alta_Alineacion_partido
     @id_partido = 1,
-    @id_seleccion = 1,
+    @id_seleccion = @idArg,
     @id_esquema_tactico = 1;
 GO
 
 SELECT * FROM Torneo.Alineacion_partido;
 GO
 
--- Test 02: Seleccion que no participa (Uruguay en partido Arg vs Bra).
+-- Test 02: Seleccion que no participa.
+DECLARE @idUru INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección de Uruguay');
+
 EXEC Torneo.Alta_Alineacion_partido
     @id_partido = 1,
-    @id_seleccion = 3,
+    @id_seleccion = @idUru,
     @id_esquema_tactico = 1;
 GO
 
 ------------------------------------------
--- PRUEBAS: Torneo.Alta_Gol
+-- PRUEBAS: Torneo.Alta_Tipo_gol
 
--- registros necesarios:
-EXEC Participantes.Alta_Jugador @nombre = 'Julián', @apellido = 'Álvarez', @fecha_nacimiento = '20000131', @id_pais_nacimiento = 1, @id_posicion_habitual = 1, @id_club_origen = 1;
-EXEC Participantes.Alta_Convocatoria @id_seleccion = 1, @id_jugador = 2, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 9;
-
-EXEC Participantes.Alta_Jugador @nombre = 'Neymar', @apellido = 'Jr', @fecha_nacimiento = '19920205', @id_pais_nacimiento = 2, @id_posicion_habitual = 1, @id_club_origen = 1;
-EXEC Participantes.Alta_Convocatoria @id_seleccion = 2, @id_jugador = 3, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 10;
-
-EXEC Participantes.Alta_Jugador @nombre = 'Federico', @apellido = 'Valverde', @fecha_nacimiento = '19980722', @id_pais_nacimiento = 3, @id_posicion_habitual = 1, @id_club_origen = 1;
-EXEC Participantes.Alta_Convocatoria @id_seleccion = 3, @id_jugador = 4, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 15;
+-- Test 01: Caso de éxito.
+EXEC orneo.Alta_Tipo_gol
+	@descripcion_tipo = 'Penal';
 GO
 
--- Test 01: Caso de éxito sin asistencia (Messi ID 1).
-EXEC Torneo.Alta_Gol
-    @id_convocatoria_autor = 1,
-    @id_convocatoria_asistencia = NULL,
-    @id_tipo_gol = 1,
-    @id_periodo_partido = 1,
-    @id_partido = 1,
-    @minuto = 15;
+SELECT * FROM Torneo.Tipo_gol;
 GO
 
-SELECT * FROM Torneo.Gol;
-GO
-
--- Test 02: Caso de éxito con asistencia (Julián asiste a Messi).
-EXEC Torneo.Alta_Gol
-    @id_convocatoria_autor = 1,
-    @id_convocatoria_asistencia = 2,
-    @id_tipo_gol = 1,
-    @id_periodo_partido = 1,
-    @id_partido = 1,
-    @minuto = 30;
-GO
-
-SELECT * FROM Torneo.Gol;
-GO
-
--- Test 03: Asistencia del equipo rival (Julián asiste a Neymar).
-EXEC Torneo.Alta_Gol
-    @id_convocatoria_autor = 3,
-    @id_convocatoria_asistencia = 2,
-    @id_tipo_gol = 1,
-    @id_periodo_partido = 1,
-    @id_partido = 1,
-    @minuto = 45;
-GO
-
--- Test 04: Gol de un jugador de otra seleccion (Valverde en Arg vs Bra).
-EXEC Torneo.Alta_Gol
-    @id_convocatoria_autor = 4,
-    @id_convocatoria_asistencia = NULL,
-    @id_tipo_gol = 1,
-    @id_periodo_partido = 1,
-    @id_partido = 1,
-    @minuto = 60;
+-- Test 02: Descripción vacía.
+EXEC orneo.Alta_Tipo_gol
+	@descripcion_tipo = '';
 GO
 
 ------------------------------------------
@@ -918,13 +887,16 @@ GO
 
 -- registros necesarios:
 EXEC Participantes.Alta_Arbitro @id_pais = 3, @id_categoria = 1, @nombre = 'Esteban', @apellido = 'Ostojich', @fecha_nacimiento = '19820412';
-INSERT INTO Torneo.Designacion_arbitral (id_partido, id_rol_arbitro, id_arbitro) VALUES (1, 1, 2);
+DECLARE @idArbitro INT = IDENT_CURRENT('Participantes.Arbitro');
+INSERT INTO Torneo.Designacion_arbitral (id_partido, id_rol_arbitro, id_arbitro) VALUES (1, 1, @idArbitro);
 GO
 
 -- Test 01: Caso de éxito.
+DECLARE @idArbitro INT = (SELECT id_arbitro FROM Participantes.Arbitro WHERE apellido = 'Ostojich');
+
 EXEC Torneo.Alta_Informe_post_partido
     @id_partido = 1,
-    @id_arbitro = 2,
+    @id_arbitro = @idArbitro,
     @calificacion_desempenio = 8,
     @observaciones = 'Excelente manejo del partido, tarjetas correctas.',
     @sancion_aplicada = NULL;
@@ -932,6 +904,7 @@ GO
 
 SELECT * FROM Torneo.Informe_post_partido;
 GO
+
 -- Test 02: Error FK.
 EXEC Torneo.Alta_Informe_post_partido
     @id_partido = 1,
@@ -942,9 +915,11 @@ EXEC Torneo.Alta_Informe_post_partido
 GO
 
 -- Test 03: Calificación fuera de rango.
+DECLARE @idArbitro INT = (SELECT id_arbitro FROM Participantes.Arbitro WHERE apellido = 'Ostojich');
+
 EXEC Torneo.Alta_Informe_post_partido
     @id_partido = 1,
-    @id_arbitro = 2,
+    @id_arbitro = @idArbitro,
     @calificacion_desempenio = 11,
     @observaciones = NULL,
     @sancion_aplicada = NULL;
