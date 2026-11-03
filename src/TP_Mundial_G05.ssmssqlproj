@@ -40,8 +40,8 @@
           <FullPath>02_vistas_funciones.sql</FullPath>
         </FileNode>
         <FileNode Name="03_SP_ABM.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>03_SP_ABM.sql</FullPath>
         </FileNode>
@@ -52,14 +52,14 @@
           <FullPath>04_SP_logica_negocio.sql</FullPath>
         </FileNode>
         <FileNode Name="05_test_SP_ABM.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>05_test_SP_ABM.sql</FullPath>
         </FileNode>
         <FileNode Name="06_test_SP_logica_negocio.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>06_test_SP_logica_negocio.sql</FullPath>
         </FileNode>
