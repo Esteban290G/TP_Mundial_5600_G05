@@ -14,6 +14,7 @@ set nocount on
 
 ------- Eliminar tablas existentes -------
 
+DROP TABLE IF EXISTS Torneo.Staging_fixture;
 DROP TABLE IF EXISTS Torneo.Sustitucion;
 DROP TABLE IF EXISTS Torneo.Informe_post_partido;
 DROP TABLE IF EXISTS Torneo.Detalle_alineacion_jugador;
@@ -225,6 +226,7 @@ CREATE TABLE Participantes.Pais (
 	nombre VARCHAR(50) NOT NULL,
 	codigo_iso CHAR(3) NOT NULL,
 	pbi_per_capita DECIMAL(18,2) NULL,
+	huso_horario VARCHAR(10) NULL, -- Formato 'UTC-3', 'UTC+5:30'. Se usa para calcular el prime time de cada mercado.
 
 	CONSTRAINT PK_Pais PRIMARY KEY (id_pais),
     CONSTRAINT FK_Pais_Moneda FOREIGN KEY (codigo_moneda) REFERENCES Participantes.Moneda(codigo_moneda),
@@ -238,12 +240,14 @@ CREATE TABLE Torneo.Parametros_suspension (
     id_fase_limpieza_amarillas INT NOT NULL,
     fechas_suspension_roja_directa TINYINT NOT NULL,
     fechas_suspension_doble_amarilla TINYINT NOT NULL,
+    cantidad_amarillas_suspension TINYINT NOT NULL CONSTRAINT DF_Parametros_Cantidad_Amarillas DEFAULT 2, -- amarillas acumuladas (en partidos distintos) que generan 1 fecha
     activo BIT NOT NULL,
 
     CONSTRAINT PK_Parametros_Suspension PRIMARY KEY (id_parametro),
     CONSTRAINT FK_Parametros_Fase_Limpieza FOREIGN KEY (id_fase_limpieza_amarillas) REFERENCES Torneo.Fase(id_fase),
     CONSTRAINT CK_Parametros_Roja CHECK (fechas_suspension_roja_directa > 0),
-    CONSTRAINT CK_Parametros_Doble_Amarilla CHECK (fechas_suspension_doble_amarilla > 0)
+    CONSTRAINT CK_Parametros_Doble_Amarilla CHECK (fechas_suspension_doble_amarilla > 0),
+    CONSTRAINT CK_Parametros_Cantidad_Amarillas CHECK (cantidad_amarillas_suspension > 0)
 );
 GO
 
@@ -551,12 +555,14 @@ CREATE TABLE Torneo.Suspension_jugador (
 	id_partido_sancion INT NULL,
 	cantidad_fechas TINYINT NOT NULL,
 	sancion_cumplida BIT NOT NULL,
+	tipo_suspension VARCHAR(30) NULL, -- Roja directa / Doble amarilla / Acumulación de amarillas (NULL si se cargó a mano)
 
 	CONSTRAINT PK_Suspension PRIMARY KEY (id_suspension),
 	CONSTRAINT FK_Suspension_Convocatoria FOREIGN KEY (id_convocatoria) REFERENCES Participantes.Convocatoria(id_convocatoria),
 	CONSTRAINT FK_Suspension_Partido_Origen FOREIGN KEY (id_partido_origen) REFERENCES Torneo.Partido(id_partido),
 	CONSTRAINT FK_Suspension_Partido_Sancion FOREIGN KEY (id_partido_sancion) REFERENCES Torneo.Partido(id_partido),
-	CONSTRAINT CK_Suspension_Partidos_Distintos CHECK (id_partido_origen <> ISNULL(id_partido_sancion, 0))
+	CONSTRAINT CK_Suspension_Partidos_Distintos CHECK (id_partido_origen <> ISNULL(id_partido_sancion, 0)),
+	CONSTRAINT CK_Suspension_Tipo CHECK (tipo_suspension IN ('Roja directa', 'Doble amarilla', 'Acumulación de amarillas'))
 );
 GO
 
@@ -619,5 +625,31 @@ CREATE TABLE Torneo.Sustitucion (
     CONSTRAINT FK_Sustitucion_Sale FOREIGN KEY (id_alineacion_partido, id_convocatoria_sale) REFERENCES Torneo.Detalle_alineacion_jugador(id_alineacion_partido, id_convocatoria), 
     CONSTRAINT FK_Sustitucion_Entra FOREIGN KEY (id_alineacion_partido, id_convocatoria_entra) REFERENCES Torneo.Detalle_alineacion_jugador(id_alineacion_partido, id_convocatoria),
     CONSTRAINT CK_Sustitucion_Distintos CHECK (id_convocatoria_sale <> id_convocatoria_entra)
+);
+GO
+------------------------------------------
+------- Tablas auxiliares de importación --
+
+-- Staging del fixture: recibe los datos crudos (texto) tal como vienen del archivo o del scraping.
+-- El SP Torneo.Importar_Fixture valida cada fila, hace el upsert en Torneo.Partido
+-- y deja registrado en cada fila el resultado (estado_proceso y mensaje_error).
+CREATE TABLE Torneo.Staging_fixture (
+	id_fila INT IDENTITY(1,1),
+	fase VARCHAR(100) NULL,
+	estadio VARCHAR(100) NULL,
+	seleccion_local VARCHAR(100) NULL,
+	seleccion_visitante VARCHAR(100) NULL,
+	fecha_hora_local VARCHAR(50) NULL,
+	fecha_hora_utc VARCHAR(50) NULL,
+	goles_local VARCHAR(10) NULL,
+	goles_visitante VARCHAR(10) NULL,
+	asistencia VARCHAR(20) NULL,
+	estado_proceso VARCHAR(20) NOT NULL CONSTRAINT DF_Staging_Fixture_Estado DEFAULT 'Pendiente',
+	mensaje_error VARCHAR(2000) NULL,
+	id_log INT NULL,
+
+	CONSTRAINT PK_Staging_Fixture PRIMARY KEY (id_fila),
+	CONSTRAINT FK_Staging_Fixture_Log FOREIGN KEY (id_log) REFERENCES Torneo.Log_importacion(id_log),
+	CONSTRAINT CK_Staging_Fixture_Estado CHECK (estado_proceso IN ('Pendiente', 'Insertado', 'Actualizado', 'Error', 'Duplicado'))
 );
 GO
