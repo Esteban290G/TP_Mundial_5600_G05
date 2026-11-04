@@ -11,6 +11,38 @@ USE COM5600_G05;
 GO
 
 ------------------------------------------
+-- PREPARACIÓN: jugadores y árbitro que usan los tests de este script.
+-- Se cargan al inicio porque el reemplazo de convocatoria, la planilla y las sustituciones ya los necesitan.
+-- Los ids se buscan por clave natural: si un alta anterior falló, los identity pueden tener huecos.
+
+DECLARE @idArg INT = (SELECT id_pais FROM Participantes.Pais WHERE codigo_iso = 'ARG');
+DECLARE @idBra INT = (SELECT id_pais FROM Participantes.Pais WHERE codigo_iso = 'BRA');
+DECLARE @idUru INT = (SELECT id_pais FROM Participantes.Pais WHERE codigo_iso = 'URY');
+DECLARE @idPos INT = (SELECT MIN(id_posicion) FROM Participantes.Posicion);
+DECLARE @idClub INT = (SELECT id_club FROM Participantes.Club_origen WHERE nombre = 'River Plate');
+DECLARE @idCat INT = (SELECT MIN(id_categoria) FROM Participantes.Categoria_arbitro);
+
+EXEC Participantes.Alta_Jugador @nombre = 'Julián', @apellido = 'Álvarez', @fecha_nacimiento = '20000131', @id_pais_nacimiento = @idArg, @id_posicion_habitual = @idPos, @id_club_origen = @idClub;
+EXEC Participantes.Alta_Jugador @nombre = 'Neymar', @apellido = 'Jr', @fecha_nacimiento = '19920205', @id_pais_nacimiento = @idBra, @id_posicion_habitual = @idPos, @id_club_origen = @idClub;
+EXEC Participantes.Alta_Jugador @nombre = 'Federico', @apellido = 'Valverde', @fecha_nacimiento = '19980722', @id_pais_nacimiento = @idUru, @id_posicion_habitual = @idPos, @id_club_origen = @idClub;
+
+-- Árbitro uruguayo, neutral para Argentina - Brasil
+EXEC Participantes.Alta_Arbitro @id_pais = @idUru, @id_categoria = @idCat, @nombre = 'Leodán', @apellido = 'González', @fecha_nacimiento = '19820707';
+GO
+
+DECLARE @selArg INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección Argentina');
+DECLARE @selBra INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección de Brasil');
+DECLARE @selUru INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección de Uruguay');
+DECLARE @jJulian INT = (SELECT id_jugador FROM Participantes.Jugador WHERE nombre = 'Julián' AND apellido = 'Álvarez');
+DECLARE @jNeymar INT = (SELECT id_jugador FROM Participantes.Jugador WHERE nombre = 'Neymar');
+DECLARE @jValverde INT = (SELECT id_jugador FROM Participantes.Jugador WHERE apellido = 'Valverde');
+
+EXEC Participantes.Alta_Convocatoria @id_seleccion = @selArg, @id_jugador = @jJulian, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 9;
+EXEC Participantes.Alta_Convocatoria @id_seleccion = @selBra, @id_jugador = @jNeymar, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 10;
+EXEC Participantes.Alta_Convocatoria @id_seleccion = @selUru, @id_jugador = @jValverde, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 15;
+GO
+
+------------------------------------------
 -- Variables para evitar errores de identity
 DECLARE @idConvMessi INT = (SELECT id_convocatoria FROM Participantes.Convocatoria C INNER JOIN Participantes.Jugador J ON C.id_jugador = J.id_jugador WHERE J.apellido = 'Messi');
 DECLARE @idConvJulian INT = (SELECT id_convocatoria FROM Participantes.Convocatoria C INNER JOIN Participantes.Jugador J ON C.id_jugador = J.id_jugador WHERE J.nombre = 'Julián');
@@ -69,14 +101,15 @@ GO
 ------------------------------------------
 -- PRUEBAS: Torneo.Asignar_Arbitro_Partido
 
--- Test 01: Caso de éxito.
+-- Test 01: Caso de éxito (Leodán González, uruguayo; Ostojich ya quedó designado en el script 07).
 DECLARE @idPartidoArgBra INT = (SELECT TOP 1 id_partido FROM Torneo.Partido);
-DECLARE @idArbOstojich INT = (SELECT id_arbitro FROM Participantes.Arbitro WHERE apellido = 'Ostojich');
+DECLARE @idArbGonzalez INT = (SELECT id_arbitro FROM Participantes.Arbitro WHERE nombre = 'Leodán' AND apellido = 'González');
+DECLARE @idRol INT = (SELECT MIN(id_rol_arbitro) FROM Participantes.Rol_arbitro);
 
 EXEC Torneo.Asignar_Arbitro_Partido
     @id_partido = @idPartidoArgBra,
-    @id_rol_arbitro = 2, 
-    @id_arbitro = @idArbOstojich;
+    @id_rol_arbitro = @idRol, 
+    @id_arbitro = @idArbGonzalez;
 GO
 
 SELECT * FROM Torneo.Designacion_arbitral;
@@ -170,15 +203,7 @@ GO
 ------------------------------------------
 -- PRUEBAS: Torneo.Registrar_Gol_Partido
 
-EXEC Participantes.Alta_Jugador @nombre = 'Julián', @apellido = 'Álvarez', @fecha_nacimiento = '20000131', @id_pais_nacimiento = 1, @id_posicion_habitual = 1, @id_club_origen = 1;
-EXEC Participantes.Alta_Convocatoria @id_seleccion = 1, @id_jugador = 2, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 9;
-
-EXEC Participantes.Alta_Jugador @nombre = 'Neymar', @apellido = 'Jr', @fecha_nacimiento = '19920205', @id_pais_nacimiento = 2, @id_posicion_habitual = 1, @id_club_origen = 1;
-EXEC Participantes.Alta_Convocatoria @id_seleccion = 2, @id_jugador = 3, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 10;
-
-EXEC Participantes.Alta_Jugador @nombre = 'Federico', @apellido = 'Valverde', @fecha_nacimiento = '19980722', @id_pais_nacimiento = 3, @id_posicion_habitual = 1, @id_club_origen = 1;
-EXEC Participantes.Alta_Convocatoria @id_seleccion = 3, @id_jugador = 4, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '20260515', @dorsal = 15;
-GO
+-- (Julián, Neymar y Valverde se cargan en la PREPARACIÓN, al inicio del script)
 
 -- Test 01: Caso de éxito sin asistencia.
 DECLARE @idPartidoArgBra INT = (SELECT TOP 1 id_partido FROM Torneo.Partido);
