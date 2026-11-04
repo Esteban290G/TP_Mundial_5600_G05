@@ -2,34 +2,19 @@
 <SqlWorkbenchSqlProject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="TP_Mundial_G05">
   <Items>
     <LogicalFolder Name="Conexiones" Type="2" Sorted="true">
-      <Items>
-        <ConnectionNode Name="DESKTOP-MNME4H2\SQLEXPRESS:DESKTOP-MNME4H2\Usuario">
-          <Created>2026-10-22T20:43:02.5849037-03:00</Created>
-          <Type>SQL</Type>
-          <Server>DESKTOP-MNME4H2\SQLEXPRESS</Server>
-          <UserName />
-          <Authentication>Autenticación de Windows</Authentication>
-          <InitialDB />
-          <LoginTimeout>30</LoginTimeout>
-          <TrustServerCertificate>True</TrustServerCertificate>
-          <EncryptionOption>True</EncryptionOption>
-          <ExecutionTimeout>0</ExecutionTimeout>
-          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
-          <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
-        </ConnectionNode>
-      </Items>
+      <Items />
     </LogicalFolder>
     <LogicalFolder Name="Consultas" Type="0" Sorted="true">
       <Items>
         <FileNode Name="00_creacion_BD.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
           <FullPath>00_creacion_BD.sql</FullPath>
         </FileNode>
         <FileNode Name="01_tablas_restricciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
           <FullPath>01_tablas_restricciones.sql</FullPath>
         </FileNode>
@@ -39,29 +24,53 @@
           <AssociatedConnUserName />
           <FullPath>02_vistas_funciones.sql</FullPath>
         </FileNode>
-        <FileNode Name="03_SP_ABM.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
-          <AssociatedConnUserName />
-          <FullPath>03_SP_ABM.sql</FullPath>
-        </FileNode>
-        <FileNode Name="04_SP_logica_negocio.sql">
+        <FileNode Name="03_SP_Altas.sql">
           <AssociatedConnectionMoniker />
           <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>04_SP_logica_negocio.sql</FullPath>
+          <FullPath>03_SP_Altas.sql</FullPath>
         </FileNode>
-        <FileNode Name="05_test_SP_ABM.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+        <FileNode Name="04_SP_Bajas.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>05_test_SP_ABM.sql</FullPath>
+          <FullPath>04_SP_Bajas.sql</FullPath>
         </FileNode>
-        <FileNode Name="06_test_SP_logica_negocio.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+        <FileNode Name="05_SP_Modificacion.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>06_test_SP_logica_negocio.sql</FullPath>
+          <FullPath>05_SP_Modificacion.sql</FullPath>
+        </FileNode>
+        <FileNode Name="06_SP_logica_negocio.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>06_SP_logica_negocio.sql</FullPath>
+        </FileNode>
+        <FileNode Name="07_test_SP_Altas.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>07_test_SP_Altas.sql</FullPath>
+        </FileNode>
+        <FileNode Name="08_test_SP_Bajas.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>08_test_SP_Bajas.sql</FullPath>
+        </FileNode>
+        <FileNode Name="09_test_SP_Modificacion.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>09_test_SP_Modificacion.sql</FullPath>
+        </FileNode>
+        <FileNode Name="10_test_SP_logica_negocio.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>10_test_SP_logica_negocio.sql</FullPath>
         </FileNode>
       </Items>
     </LogicalFolder>

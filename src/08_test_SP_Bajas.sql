@@ -832,8 +832,23 @@ GO
 ------------------------------------------
 -- PRUEBAS: Torneo.Baja_Sustitucion
 
-EXEC Torneo.Registrar_Sustitucion_Partido @id_alineacion_partido = 1, @id_convocatoria_sale = 1, @id_convocatoria_entra = 2, @motivo_sustitucion = 'Test Baja', @minuto = 90, @numero_ventanas = 3, @es_tiempo_suplementario = 0;
-DECLARE @idSust INT = IDENT_CURRENT('Torneo.Sustitucion');
+-- Registros necesarios: dos jugadores auxiliares de Argentina en la planilla del partido 1 (uno titular y uno suplente)
+DECLARE @idPaisArg INT = (SELECT id_pais FROM Participantes.Pais WHERE codigo_iso = 'ARG');
+DECLARE @idSelArg INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección Argentina');
+EXEC Participantes.Alta_Jugador @nombre = 'Sale', @apellido = 'Borrable', @fecha_nacimiento = '2000-01-01', @id_pais_nacimiento = @idPaisArg, @id_posicion_habitual = 1, @id_club_origen = 1;
+EXEC Participantes.Alta_Jugador @nombre = 'Entra', @apellido = 'Borrable', @fecha_nacimiento = '2000-01-01', @id_pais_nacimiento = @idPaisArg, @id_posicion_habitual = 1, @id_club_origen = 1;
+DECLARE @jSale INT = (SELECT id_jugador FROM Participantes.Jugador WHERE nombre = 'Sale' AND apellido = 'Borrable');
+DECLARE @jEntra INT = (SELECT id_jugador FROM Participantes.Jugador WHERE nombre = 'Entra' AND apellido = 'Borrable');
+EXEC Participantes.Alta_Convocatoria @id_seleccion = @idSelArg, @id_jugador = @jSale, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '2026-05-15', @dorsal = 22;
+EXEC Participantes.Alta_Convocatoria @id_seleccion = @idSelArg, @id_jugador = @jEntra, @estado_convocatoria = 'Confirmado', @fecha_alta_convocatoria = '2026-05-15', @dorsal = 23;
+DECLARE @cSale INT = (SELECT id_convocatoria FROM Participantes.Convocatoria WHERE id_jugador = @jSale);
+DECLARE @cEntra INT = (SELECT id_convocatoria FROM Participantes.Convocatoria WHERE id_jugador = @jEntra);
+DECLARE @idAli INT = (SELECT A.id_alineacion_partido FROM Torneo.Alineacion_partido A
+                        INNER JOIN Participantes.Seleccion S ON A.id_seleccion = S.id_seleccion
+                        WHERE A.id_partido = 1 AND S.nombre_seleccion = 'Selección Argentina');
+EXEC Torneo.Confirmar_Planilla_Jugador @id_alineacion_partido = @idAli, @id_convocatoria = @cSale, @id_posicion_partido = 1, @es_titular = 1;
+EXEC Torneo.Confirmar_Planilla_Jugador @id_alineacion_partido = @idAli, @id_convocatoria = @cEntra, @id_posicion_partido = 1, @es_titular = 0;
+EXEC Torneo.Registrar_Sustitucion_Partido @id_alineacion_partido = @idAli, @id_convocatoria_sale = @cSale, @id_convocatoria_entra = @cEntra, @motivo_sustitucion = 'Test Baja', @minuto = 90, @numero_ventanas = 3, @es_tiempo_suplementario = 0;
 GO
 
 -- Test 01: Caso de éxito.
@@ -851,11 +866,33 @@ EXEC Torneo.Baja_Sustitucion
     @id_sustitucion = 9999;
 GO
 
+-- Limpieza de los registros auxiliares
+DECLARE @idAli INT = (SELECT A.id_alineacion_partido FROM Torneo.Alineacion_partido A
+                        INNER JOIN Participantes.Seleccion S ON A.id_seleccion = S.id_seleccion
+                        WHERE A.id_partido = 1 AND S.nombre_seleccion = 'Selección Argentina');
+DECLARE @jSale INT = (SELECT id_jugador FROM Participantes.Jugador WHERE nombre = 'Sale' AND apellido = 'Borrable');
+DECLARE @jEntra INT = (SELECT id_jugador FROM Participantes.Jugador WHERE nombre = 'Entra' AND apellido = 'Borrable');
+DECLARE @cSale INT = (SELECT id_convocatoria FROM Participantes.Convocatoria WHERE id_jugador = @jSale);
+DECLARE @cEntra INT = (SELECT id_convocatoria FROM Participantes.Convocatoria WHERE id_jugador = @jEntra);
+EXEC Torneo.Baja_Detalle_alineacion_jugador @id_alineacion_partido = @idAli, @id_convocatoria = @cSale;
+EXEC Torneo.Baja_Detalle_alineacion_jugador @id_alineacion_partido = @idAli, @id_convocatoria = @cEntra;
+EXEC Participantes.Baja_Convocatoria @id_convocatoria = @cSale;
+EXEC Participantes.Baja_Convocatoria @id_convocatoria = @cEntra;
+EXEC Participantes.Baja_Jugador @id_jugador = @jSale;
+EXEC Participantes.Baja_Jugador @id_jugador = @jEntra;
+GO
+
 ------------------------------------------
 -- PRUEBAS: Torneo.Baja_Informe_post_partido
 
-EXEC Torneo.Alta_Informe_post_partido @id_partido = 1, @id_arbitro = 2, @calificacion_desempenio = 5, @observaciones = 'Informe a borrar', @sancion_aplicada = NULL;
-DECLARE @idInf INT = IDENT_CURRENT('Torneo.Informe_post_partido');
+-- Registros necesarios: un árbitro uruguayo auxiliar designado en el partido 1
+-- (Ostojich ya tiene informe en ese partido desde el script 07). Se borra en las pruebas de Baja_Designacion_arbitral.
+DECLARE @idPaisUru INT = (SELECT id_pais FROM Participantes.Pais WHERE codigo_iso = 'URY');
+DECLARE @idRol INT = (SELECT MIN(id_rol_arbitro) FROM Participantes.Rol_arbitro);
+EXEC Participantes.Alta_Arbitro @id_pais = @idPaisUru, @id_categoria = 1, @nombre = 'Arbitro', @apellido = 'Borrable', @fecha_nacimiento = '1980-01-01';
+DECLARE @idArb INT = (SELECT id_arbitro FROM Participantes.Arbitro WHERE nombre = 'Arbitro' AND apellido = 'Borrable');
+EXEC Torneo.Asignar_Arbitro_Partido @id_partido = 1, @id_rol_arbitro = @idRol, @id_arbitro = @idArb;
+EXEC Torneo.Alta_Informe_post_partido @id_partido = 1, @id_arbitro = @idArb, @calificacion_desempenio = 5, @observaciones = 'Informe a borrar', @sancion_aplicada = NULL;
 GO
 
 -- Test 01: Caso de éxito.
@@ -876,16 +913,24 @@ GO
 ------------------------------------------
 -- PRUEBAS: Torneo.Baja_Detalle_alineacion_jugador
 
-EXEC Torneo.Confirmar_Planilla_Jugador @id_alineacion_partido = 1, @id_convocatoria = 4, @id_posicion_partido = 1, @es_titular = 0;
+-- Registros necesarios: Messi como suplente en la planilla de Argentina del partido 1
+DECLARE @idAli INT = (SELECT A.id_alineacion_partido FROM Torneo.Alineacion_partido A
+                        INNER JOIN Participantes.Seleccion S ON A.id_seleccion = S.id_seleccion
+                        WHERE A.id_partido = 1 AND S.nombre_seleccion = 'Selección Argentina');
+DECLARE @cMessi INT = (SELECT C.id_convocatoria FROM Participantes.Convocatoria C INNER JOIN Participantes.Jugador J ON C.id_jugador = J.id_jugador WHERE J.apellido = 'Messi');
+EXEC Torneo.Confirmar_Planilla_Jugador @id_alineacion_partido = @idAli, @id_convocatoria = @cMessi, @id_posicion_partido = 1, @es_titular = 0;
 GO
 
 -- Test 01: Caso de éxito.
+DECLARE @idAli INT = (SELECT A.id_alineacion_partido FROM Torneo.Alineacion_partido A
+                        INNER JOIN Participantes.Seleccion S ON A.id_seleccion = S.id_seleccion
+                        WHERE A.id_partido = 1 AND S.nombre_seleccion = 'Selección Argentina');
+DECLARE @cMessi INT = (SELECT C.id_convocatoria FROM Participantes.Convocatoria C INNER JOIN Participantes.Jugador J ON C.id_jugador = J.id_jugador WHERE J.apellido = 'Messi');
 EXEC Torneo.Baja_Detalle_alineacion_jugador 
-    @id_alineacion_partido = 1, 
-    @id_convocatoria = 4;
-GO
+    @id_alineacion_partido = @idAli, 
+    @id_convocatoria = @cMessi;
 
-SELECT * FROM Torneo.Detalle_alineacion_jugador WHERE id_alineacion_partido = 1 AND id_convocatoria = 4;
+SELECT * FROM Torneo.Detalle_alineacion_jugador WHERE id_alineacion_partido = @idAli AND id_convocatoria = @cMessi;
 GO
 
 -- Test 02: Registro no existe
@@ -1006,16 +1051,19 @@ GO
 ------------------------------------------
 -- PRUEBAS: Torneo.Baja_Designacion_arbitral
 
-EXEC Torneo.Asignar_Arbitro_Partido @id_partido = 1, @id_rol_arbitro = 1, @id_arbitro = 2;
-GO
+-- Registro necesario: la designación del árbitro auxiliar (se cargó en las pruebas de Baja_Informe_post_partido,
+-- y su informe ya se borró).
 
 -- Test 01: Caso de éxito.
+DECLARE @idArb INT = (SELECT id_arbitro FROM Participantes.Arbitro WHERE nombre = 'Arbitro' AND apellido = 'Borrable');
 EXEC Torneo.Baja_Designacion_arbitral 
     @id_partido = 1, 
-    @id_arbitro = 2;
-GO
+    @id_arbitro = @idArb;
 
-SELECT * FROM Torneo.Designacion_arbitral WHERE id_partido = 1 AND id_arbitro = 2;
+SELECT * FROM Torneo.Designacion_arbitral WHERE id_partido = 1 AND id_arbitro = @idArb;
+
+-- Limpieza del árbitro auxiliar
+EXEC Participantes.Baja_Arbitro @id_arbitro = @idArb;
 GO
 
 -- Test 02: Registro no existe
@@ -1058,7 +1106,8 @@ GO
 
 DECLARE @idArg INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección Argentina');
 DECLARE @idBra INT = (SELECT id_seleccion FROM Participantes.Seleccion WHERE nombre_seleccion = 'Selección de Brasil');
-EXEC Torneo.Alta_Partido @id_sede = 1, @id_fase = 1, @id_seleccion_local = @idArg, @id_seleccion_visitante = @idBra, @id_importacion_origen = 1, @fecha_hora_local = '20300101 10:00:00', @asistencia_publico = 100, @goles_local = 0, @goles_visitante = 0, @UTC = '2030-01-01 13:00:00';
+-- (Brasil de local: Argentina - Brasil en la fase 1 ya existe y la clave única lo rechazaría)
+EXEC Torneo.Alta_Partido @id_sede = 1, @id_fase = 1, @id_seleccion_local = @idBra, @id_seleccion_visitante = @idArg, @id_importacion_origen = 1, @fecha_hora_local = '20300101 10:00:00', @asistencia_publico = 100, @goles_local = 0, @goles_visitante = 0, @UTC = '2030-01-01 13:00:00';
 DECLARE @idPartidoAux INT = IDENT_CURRENT('Torneo.Partido');
 GO
 

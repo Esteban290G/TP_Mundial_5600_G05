@@ -782,7 +782,7 @@ GO
 -- PRUEBAS: Torneo.Alta_Tipo_gol
 
 -- Test 01: Caso de éxito.
-EXEC orneo.Alta_Tipo_gol
+EXEC Torneo.Alta_Tipo_gol
 	@descripcion_tipo = 'Penal';
 GO
 
@@ -790,7 +790,7 @@ SELECT * FROM Torneo.Tipo_gol;
 GO
 
 -- Test 02: Descripción vacía.
-EXEC orneo.Alta_Tipo_gol
+EXEC Torneo.Alta_Tipo_gol
 	@descripcion_tipo = '';
 GO
 
@@ -886,9 +886,11 @@ GO
 -- PRUEBAS: Torneo.Alta_Informe_post_partido
 
 -- registros necesarios:
-EXEC Participantes.Alta_Arbitro @id_pais = 3, @id_categoria = 1, @nombre = 'Esteban', @apellido = 'Ostojich', @fecha_nacimiento = '19820412';
-DECLARE @idArbitro INT = IDENT_CURRENT('Participantes.Arbitro');
-INSERT INTO Torneo.Designacion_arbitral (id_partido, id_rol_arbitro, id_arbitro) VALUES (1, 1, @idArbitro);
+-- (el país se busca por código ISO: si un alta anterior falló, el id de Uruguay puede no ser 3)
+DECLARE @idPaisUru INT = (SELECT id_pais FROM Participantes.Pais WHERE codigo_iso = 'URY');
+EXEC Participantes.Alta_Arbitro @id_pais = @idPaisUru, @id_categoria = 1, @nombre = 'Esteban', @apellido = 'Ostojich', @fecha_nacimiento = '19820412';
+DECLARE @idArbitro INT = (SELECT id_arbitro FROM Participantes.Arbitro WHERE apellido = 'Ostojich');
+EXEC Torneo.Asignar_Arbitro_Partido @id_partido = 1, @id_rol_arbitro = 1, @id_arbitro = @idArbitro;
 GO
 
 -- Test 01: Caso de éxito.

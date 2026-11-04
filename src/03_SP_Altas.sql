@@ -773,18 +773,19 @@ GO
 ------------------------------------------
 -- Procedimiento: Participantes.Alta_Pais
 -- Descripción: Da de alta un nuevo país en el sistema.
--- Validaciones: Nombre vacío, ISO distinto de 3 letras y PBI negativo.
+-- Validaciones: Nombre vacío, ISO distinto de 3 letras, PBI negativo y formato de huso horario.
 
 CREATE OR ALTER PROCEDURE Participantes.Alta_Pais
     @codigo_moneda CHAR(3),
     @nombre VARCHAR(50),
     @codigo_iso CHAR(3),
-    @pbi_per_capita DECIMAL(18,2)
+    @pbi_per_capita DECIMAL(18,2),
+    @huso_horario VARCHAR(10) = NULL -- Opcional (ej: 'UTC-3'). Se usa para calcular el prime time del mercado.
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @MensajeError VARCHAR(150) = '';
+    DECLARE @MensajeError VARCHAR(300) = '';
 
     -- Nombre vacío
     IF (@nombre IS NULL OR LTRIM(RTRIM(@nombre)) = '')
@@ -798,6 +799,10 @@ BEGIN
     IF (@pbi_per_capita < 0)
         SET @MensajeError = @MensajeError + '- El PBI per cápita no puede ser negativo. ';
 
+    -- Formato de huso horario
+    IF (@huso_horario IS NOT NULL AND Torneo.fn_Offset_Huso_Minutos(@huso_horario) IS NULL)
+        SET @MensajeError = @MensajeError + '- El huso horario debe tener el formato UTC±H o UTC±H:MM (ej: UTC-3). ';
+
     IF (@MensajeError <> '')
     BEGIN
         ;THROW 50001, @MensajeError, 1;
@@ -807,12 +812,13 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        INSERT INTO Participantes.Pais (codigo_moneda, nombre, codigo_iso, pbi_per_capita)
+        INSERT INTO Participantes.Pais (codigo_moneda, nombre, codigo_iso, pbi_per_capita, huso_horario)
         VALUES (
             UPPER(LTRIM(RTRIM(@codigo_moneda))), 
             LTRIM(RTRIM(@nombre)), 
             UPPER(LTRIM(RTRIM(@codigo_iso))), 
-            @pbi_per_capita
+            @pbi_per_capita,
+            UPPER(REPLACE(LTRIM(RTRIM(@huso_horario)), ' ', ''))
         );
 
         COMMIT TRANSACTION;
@@ -838,12 +844,13 @@ CREATE OR ALTER PROCEDURE Torneo.Alta_Parametros_suspension
     @id_fase_limpieza_amarillas INT,
     @fechas_suspension_roja_directa TINYINT,
     @fechas_suspension_doble_amarilla TINYINT,
-    @activo bit
+    @activo bit,
+    @cantidad_amarillas_suspension TINYINT = 2 -- Opcional: amarillas acumuladas que generan suspensión
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @MensajeError VARCHAR(170) = '';
+    DECLARE @MensajeError VARCHAR(300) = '';
 
     -- Roja directa
     IF (@fechas_suspension_roja_directa = 0)
@@ -852,6 +859,10 @@ BEGIN
     -- Doble amarilla
     IF (@fechas_suspension_doble_amarilla = 0)
         SET @MensajeError = @MensajeError + '- La cantidad de fechas de suspensión por doble amarilla tiene que ser mayor a 0. ';
+
+    -- Amarillas acumuladas
+    IF (@cantidad_amarillas_suspension IS NULL OR @cantidad_amarillas_suspension = 0)
+        SET @MensajeError = @MensajeError + '- La cantidad de amarillas acumuladas para suspender tiene que ser mayor a 0. ';
 
     IF (@MensajeError <> '')
     BEGIN
@@ -862,11 +873,12 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        INSERT INTO Torneo.Parametros_suspension (id_fase_limpieza_amarillas, fechas_suspension_roja_directa, fechas_suspension_doble_amarilla, activo)
+        INSERT INTO Torneo.Parametros_suspension (id_fase_limpieza_amarillas, fechas_suspension_roja_directa, fechas_suspension_doble_amarilla, cantidad_amarillas_suspension, activo)
         VALUES (
             @id_fase_limpieza_amarillas,
             @fechas_suspension_roja_directa,
             @fechas_suspension_doble_amarilla,
+            @cantidad_amarillas_suspension,
             @activo
         );
 
