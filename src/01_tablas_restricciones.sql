@@ -13,7 +13,8 @@ GO
 set nocount on
 
 ------- Eliminar tablas existentes -------
-
+DROP TABLE IF EXISTS Torneo.Staging_stadiums;
+DROP TABLE IF EXISTS Torneo.Staging_fixture;
 DROP TABLE IF EXISTS Torneo.Sustitucion;
 DROP TABLE IF EXISTS Torneo.Informe_post_partido;
 DROP TABLE IF EXISTS Torneo.Detalle_alineacion_jugador;
@@ -619,5 +620,48 @@ CREATE TABLE Torneo.Sustitucion (
     CONSTRAINT FK_Sustitucion_Sale FOREIGN KEY (id_alineacion_partido, id_convocatoria_sale) REFERENCES Torneo.Detalle_alineacion_jugador(id_alineacion_partido, id_convocatoria), 
     CONSTRAINT FK_Sustitucion_Entra FOREIGN KEY (id_alineacion_partido, id_convocatoria_entra) REFERENCES Torneo.Detalle_alineacion_jugador(id_alineacion_partido, id_convocatoria),
     CONSTRAINT CK_Sustitucion_Distintos CHECK (id_convocatoria_sale <> id_convocatoria_entra)
+);
+GO
+------------------------------------------
+------- Tablas auxiliares de importación --
+
+-- Staging del fixture: recibe los datos crudos (texto) tal como vienen del archivo o del scraping.
+-- El SP Torneo.Importar_Fixture valida cada fila, hace el upsert en Torneo.Partido
+-- y deja registrado en cada fila el resultado (estado_proceso y mensaje_error).
+CREATE TABLE Torneo.Staging_fixture (
+	id_fila INT IDENTITY(1,1),
+	fase VARCHAR(100) NULL,
+	estadio VARCHAR(100) NULL,
+	seleccion_local VARCHAR(100) NULL,
+	seleccion_visitante VARCHAR(100) NULL,
+	fecha_hora_local VARCHAR(50) NULL,
+	fecha_hora_utc VARCHAR(50) NULL,
+	goles_local VARCHAR(10) NULL,
+	goles_visitante VARCHAR(10) NULL,
+	asistencia VARCHAR(20) NULL,
+	estado_proceso VARCHAR(20) NOT NULL CONSTRAINT DF_Staging_Fixture_Estado DEFAULT 'Pendiente',
+	mensaje_error VARCHAR(2000) NULL,
+	id_log INT NULL,
+
+	CONSTRAINT PK_Staging_Fixture PRIMARY KEY (id_fila),
+	CONSTRAINT FK_Staging_Fixture_Log FOREIGN KEY (id_log) REFERENCES Torneo.Log_importacion(id_log),
+	CONSTRAINT CK_Staging_Fixture_Estado CHECK (estado_proceso IN ('Pendiente', 'Insertado', 'Actualizado', 'Error', 'Duplicado'))
+);
+GO
+
+CREATE TABLE Torneo.Staging_stadiums (
+    key_id VARCHAR(100),
+    stadium_id VARCHAR(100),
+    stadium_name VARCHAR(100),
+    city_name VARCHAR(100),
+    country_name VARCHAR(100),
+    stadium_capacity VARCHAR(100),
+    stadium_wikipedia_link VARCHAR(500),
+    city_wikipedia_link VARCHAR(500),
+
+    id_fila INT IDENTITY(1,1) PRIMARY KEY,
+    estado_proceso VARCHAR(20) DEFAULT 'Pendiente',
+    mensaje_error VARCHAR(2000),
+    id_log INT NULL
 );
 GO
