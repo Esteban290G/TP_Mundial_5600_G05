@@ -112,3 +112,16 @@ RETURN
       AND OFS.offset_minutos IS NOT NULL
 );
 GO
+
+------------------------------------------
+-- Vista: Torneo.vw_Staging_stadiums
+-- Descripcion: Vista utilizada para la carga masiva del archivo stadiums.csv
+--              muestra solamente 8 columnas para coincidir con el archivo original
+
+CREATE OR ALTER VIEW Torneo.vw_Staging_stadiums
+AS
+SELECT 
+    key_id, stadium_id, stadium_name, city_name, country_name, 
+    stadium_capacity, stadium_wikipedia_link, city_wikipedia_link
+FROM Torneo.Stadiums;
+GO

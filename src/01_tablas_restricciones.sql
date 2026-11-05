@@ -13,7 +13,7 @@ GO
 set nocount on
 
 ------- Eliminar tablas existentes -------
-
+DROP TABLE IF EXISTS Torneo.Staging_stadiums;
 DROP TABLE IF EXISTS Torneo.Staging_fixture;
 DROP TABLE IF EXISTS Torneo.Sustitucion;
 DROP TABLE IF EXISTS Torneo.Informe_post_partido;
@@ -651,5 +651,22 @@ CREATE TABLE Torneo.Staging_fixture (
 	CONSTRAINT PK_Staging_Fixture PRIMARY KEY (id_fila),
 	CONSTRAINT FK_Staging_Fixture_Log FOREIGN KEY (id_log) REFERENCES Torneo.Log_importacion(id_log),
 	CONSTRAINT CK_Staging_Fixture_Estado CHECK (estado_proceso IN ('Pendiente', 'Insertado', 'Actualizado', 'Error', 'Duplicado'))
+);
+GO
+
+CREATE TABLE Torneo.Staging_stadiums (
+    key_id VARCHAR(100),
+    stadium_id VARCHAR(100),
+    stadium_name VARCHAR(100),
+    city_name VARCHAR(100),
+    country_name VARCHAR(100),
+    stadium_capacity VARCHAR(100),
+    stadium_wikipedia_link VARCHAR(500),
+    city_wikipedia_link VARCHAR(500),
+
+    id_fila INT IDENTITY(1,1) PRIMARY KEY,
+    estado_proceso VARCHAR(20) DEFAULT 'Pendiente',
+    mensaje_error VARCHAR(2000),
+    id_log INT NULL
 );
 GO
