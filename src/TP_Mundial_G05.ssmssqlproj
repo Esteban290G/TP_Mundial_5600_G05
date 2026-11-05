@@ -9,10 +9,10 @@
           <Server>DESKTOP-MNME4H2\SQLEXPRESS</Server>
           <UserName />
           <Authentication>Autenticación de Windows</Authentication>
-          <InitialDB />
+          <InitialDB>COM5600_G05</InitialDB>
           <LoginTimeout>30</LoginTimeout>
           <TrustServerCertificate>True</TrustServerCertificate>
-          <EncryptionOption>True</EncryptionOption>
+          <EncryptionOption>False</EncryptionOption>
           <ExecutionTimeout>0</ExecutionTimeout>
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName />
@@ -22,14 +22,14 @@
     <LogicalFolder Name="Consultas" Type="0" Sorted="true">
       <Items>
         <FileNode Name="00_creacion_BD.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
           <FullPath>00_creacion_BD.sql</FullPath>
         </FileNode>
         <FileNode Name="01_tablas_restricciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
           <FullPath>01_tablas_restricciones.sql</FullPath>
         </FileNode>
@@ -55,7 +55,7 @@
           <AssociatedConnectionMoniker />
           <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>03_SP_ABM.sql</FullPath>
+          <FullPath>03_SP_Altas.sql</FullPath>
         </FileNode>
         <FileNode Name="06_SP_logica_negocio.sql">
           <AssociatedConnectionMoniker />
