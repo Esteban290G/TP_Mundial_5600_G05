@@ -61,12 +61,16 @@ CIUDADES_CANADA = {"toronto", "vancouver"}
 # ------------------------------------------------------------------
 # Descarga
 
-def descargar_wikitext(titulo):
+def descargar_wikitext(titulo, redirecciones=2):
     url = WIKI.format(urllib.parse.quote(titulo.replace(" ", "_")))
     pedido = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(pedido, timeout=30) as respuesta:
         texto = respuesta.read().decode("utf-8")
     time.sleep(PAUSA_SEGUNDOS)
+    # Si la página es una redirección (#REDIRECT [[Otra página]]) se sigue
+    m = re.match(r"\s*#REDIRECT\s*\[\[([^\]#|]+)", texto, re.I)
+    if m and redirecciones > 0:
+        return descargar_wikitext(m.group(1).strip(), redirecciones - 1)
     return texto
 
 
@@ -246,9 +250,16 @@ def fase_de_posicion(texto, posicion):
     return None
 
 
+# Formas en que Wikipedia escribe un partido: la plantilla clásica y la llamada directa al módulo
+PLANTILLAS_PARTIDO = [
+    r"#invoke:\s*football[ _]?box(?:[ _]collapsible)?\s*\|\s*main",
+    r"football[ _]?box(?:[ _]collapsible)?",
+]
+
+
 def extraer_partidos(wikitext, fase_fija=None, grupo=None):
     partidos = []
-    for posicion, contenido in extraer_plantillas(wikitext, ["football box", "footballbox", "football box collapsible"]):
+    for posicion, contenido in extraer_plantillas(wikitext, PLANTILLAS_PARTIDO):
         p = separar_parametros(contenido)
         fase = fase_fija or fase_de_posicion(wikitext, posicion)
         fecha = parsear_fecha(p.get("date"))
@@ -370,6 +381,21 @@ EJEMPLO = """
 """
 
 
+EJEMPLO_INVOKE = """
+===South Korea vs Czechia===
+{{#invoke:football box|main
+|date={{Start date|2026|6|11}}
+|time=20:00 [[Central Time Zone|CST]] ([[UTC−6]])
+|team1={{fb-rt|KOR}}
+|score=1–1
+|team2={{fb|CZE}}
+|stadium=[[Estadio Akron]], [[Zapopan]]
+|attendance=46,000
+|referee=Someone (Somewhere)
+}}
+"""
+
+
 EJEMPLO_ELIMINATORIA = """
 ==Round of 16==
 ===Match 89===
@@ -407,14 +433,23 @@ def main(argumentos):
     partidos, grupos, capacidades = [], {}, {}
 
     if prueba:
-        partidos = extraer_partidos(EJEMPLO, "Fase de Grupos", "A") + extraer_partidos(EJEMPLO_ELIMINATORIA)
+        partidos = (extraer_partidos(EJEMPLO, "Fase de Grupos", "A") + extraer_partidos(EJEMPLO_INVOKE, "Fase de Grupos", "A")
+                    + extraer_partidos(EJEMPLO_ELIMINATORIA))
         capacidades = {"Estadio Azteca": 83264, "Lincoln Financial Field": 67594}
     else:
-        for letra, titulo in PAGINAS_GRUPOS.items():
+        paginas = [(titulo, "Fase de Grupos", letra) for letra, titulo in PAGINAS_GRUPOS.items()]
+        paginas.append((PAGINA_ELIMINATORIA, None, None))
+        for titulo, fase, letra in paginas:
             print("Descargando", titulo)
-            partidos += extraer_partidos(descargar_wikitext(titulo), "Fase de Grupos", letra)
-        print("Descargando", PAGINA_ELIMINATORIA)
-        partidos += extraer_partidos(descargar_wikitext(PAGINA_ELIMINATORIA))
+            wikitext = descargar_wikitext(titulo)
+            encontrados = extraer_partidos(wikitext, fase, letra)
+            print("  {} caracteres, {} partidos".format(len(wikitext), len(encontrados)))
+            if not encontrados:
+                # Diagnóstico: muestra cómo empieza el primer bloque que parece un partido
+                i = wikitext.lower().find("team1")
+                print("  DIAGNÓSTICO (no se reconoció ningún partido):")
+                print("  " + (wikitext[max(0, i - 400):i + 200] if i >= 0 else wikitext[:600]).replace("\n", "\n  "))
+            partidos += encontrados
         for articulo in sorted({p["estadio_articulo"] for p in partidos if p["estadio_articulo"]}):
             try:
                 print("Descargando", articulo)
