@@ -7,11 +7,18 @@
 
 -- Importaciones --
 -- DATASETS ELEGIDOS:
--- github.com/jfjelstul/worldcup - Formato: CSV 
+-- repositorio worldcup - Formato: CSV 
 --
 -- APIs ELEGIDAS:
--- API del Banco Mundial
--- 
+--
+-- API de NOMINATIM
+--- Geolocalización de Estadios (Latitud y Longitud)
+--- Es un servicio de OpenStreetMap.
+--- https://nominatim.openstreetmap.org/search
+--- Rate Limit: 1 petición HTTP por segundo por dirección IP.
+--- Autenticación: API pública, no requiere API Key.
+--- Pide un HTTP Referer o User-Agent válido que identifique la aplicación.
+--
 ------------------------------------------
 
 USE COM5600_G05;
@@ -34,10 +41,10 @@ BEGIN
     SET @sql = N'BULK INSERT Torneo.vw_Staging_stadiums
                  FROM ''' + @nombre_archivo + '''
                  WITH (
-                     FORMAT = ''CSV'',            -- Interpreta comillas y formato CSV nativo (SQL 2017+)
+                     FORMAT = ''CSV'',
                      FIELDTERMINATOR = '','',
-                     ROWTERMINATOR = ''0x0a'',   -- Salto de línea de GitHub (Linux)
-                     CODEPAGE = ''65001'',       -- Soporte para UTF-8 (acentos y ñ)
+                     ROWTERMINATOR = ''0x0a'',
+                     CODEPAGE = ''65001'',
                      FIRSTROW = 2
                  )';
                  
@@ -228,10 +235,97 @@ END;
 GO
 
 ------------------------------------------
+-- API Nominatim
 
--- API del Banco Mundial
+CREATE OR ALTER PROCEDURE Torneo.Actualizar_Coordenadas_Sedes
+AS
+BEGIN
+    SET NOCOUNT ON;
 
--- codigo 
+    DECLARE @id_actual INT = 0;
+    DECLARE @estadio VARCHAR(30);
+    DECLARE @ciudad VARCHAR(50);
+    
+    DECLARE @url VARCHAR(2000);
+    DECLARE @token INT;
+    DECLARE @hr INT;
+    DECLARE @response VARCHAR(8000);
+    DECLARE @lat_extraida DECIMAL(9,6);
+    DECLARE @lon_extraida DECIMAL(9,6);
+
+    -- id mas bajo de las sedes que tengan lat y long en 0
+    SELECT TOP 1 
+        @id_actual = S.id_sede, 
+        @estadio = S.nombre_estadio, 
+        @ciudad = C.nombre
+    FROM Torneo.Sede S
+    INNER JOIN Participantes.Ciudad C ON S.id_ciudad = C.id_ciudad
+    WHERE S.latitud = 0.0 AND S.longitud = 0.0
+    ORDER BY S.id_sede ASC;
+
+    -- el bucle while corta cuando no encuentre mas id
+    WHILE @id_actual IS NOT NULL
+    BEGIN
+        SET @response = '';
+        SET @lat_extraida = NULL;
+        SET @lon_extraida = NULL;
+
+        SET @url = 'https://nominatim.openstreetmap.org/search?q=' 
+                   + REPLACE(@estadio, ' ', '+') + ',' 
+                   + REPLACE(@ciudad, ' ', '+') 
+                   + '&format=json&limit=1';
+
+        -- Llamada a la API
+        EXEC @hr = sp_OACreate 'MSXML2.ServerXMLHTTP', @token OUT;
+        IF @hr = 0
+        BEGIN
+            EXEC @hr = sp_OAMethod @token, 'open', NULL, 'GET', @url, 'false';
+            EXEC @hr = sp_OAMethod @token, 'setRequestHeader', NULL, 'User-Agent', 'Proyecto_UNLaM_BDA_G05';
+            EXEC @hr = sp_OAMethod @token, 'send';
+            EXEC @hr = sp_OAGetProperty @token, 'responseText', @response OUT;
+            EXEC sp_OADestroy @token;
+        END
+
+        IF ISJSON(@response) > 0
+        BEGIN
+            SELECT 
+                @lat_extraida = CAST(JSON_VALUE(@response, '$[0].lat') AS DECIMAL(9,6)),
+                @lon_extraida = CAST(JSON_VALUE(@response, '$[0].lon') AS DECIMAL(9,6));
+                
+            IF @lat_extraida IS NOT NULL AND @lon_extraida IS NOT NULL
+            BEGIN
+                UPDATE Torneo.Sede
+                SET latitud = @lat_extraida,
+                    longitud = @lon_extraida
+                WHERE id_sede = @id_actual;
+                
+                PRINT 'Geolocalizado: ' + @estadio;
+            END
+        END
+
+        WAITFOR DELAY '00:00:01'; -- Rate limit
+
+        -- siguiente id mayor al actual
+        DECLARE @siguiente_id INT = NULL;
+        
+        SELECT TOP 1 
+            @siguiente_id = S.id_sede, 
+            @estadio = S.nombre_estadio, 
+            @ciudad = C.nombre
+        FROM Torneo.Sede S
+        INNER JOIN Participantes.Ciudad C ON S.id_ciudad = C.id_ciudad
+        WHERE S.latitud = 0.0 
+          AND S.longitud = 0.0 
+          AND S.id_sede > @id_actual
+        ORDER BY S.id_sede ASC;
+
+        -- variable actualizada para la proxima vuelta (si es null sale)
+        SET @id_actual = @siguiente_id;
+    END
+
+    PRINT 'Proceso de API finalizado.';
+END;
+GO
 
 --========================================
 
