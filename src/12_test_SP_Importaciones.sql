@@ -5,13 +5,14 @@
 -- Gonzalez Esteban Gabriel 42888511
 -- Vázquez Nahuel Domiciano 35756270
 -- Fecha: 2026-11-05
--- Descripción: Scripts de prueba para la importación de archivos.
+-- Descripción: Scripts de prueba para la importación de archivos y APIs.
 ------------------------------------------
 
 USE COM5600_G05;
 GO
 
 ------------------------------------------
+
 
 EXEC Torneo.Importar_CSV_Stadiums @nombre_archivo = 'C:\Importar\stadiums.csv';
 GO
@@ -36,7 +37,6 @@ SELECT
 FROM Torneo.Sede S
 INNER JOIN Participantes.Ciudad C ON S.id_ciudad = C.id_ciudad;
 
-
 SELECT 
     id_log, 
     nombre_archivo_o_fuente, 
@@ -47,3 +47,13 @@ SELECT
 FROM Torneo.Log_importacion 
 ORDER BY id_log DESC;
 GO
+
+-- Prueba de la API de Nominatim
+
+SELECT id_sede, nombre_estadio, latitud, longitud 
+FROM Torneo.Sede;
+
+EXEC Torneo.Actualizar_Coordenadas_Sedes;
+
+SELECT id_sede, nombre_estadio, latitud, longitud 
+FROM Torneo.Sede;
