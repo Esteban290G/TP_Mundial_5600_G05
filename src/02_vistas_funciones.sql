@@ -123,5 +123,72 @@ AS
 SELECT 
     key_id, stadium_id, stadium_name, city_name, country_name, 
     stadium_capacity, stadium_wikipedia_link, city_wikipedia_link
-FROM Torneo.Stadiums;
+FROM Torneo.Staging_stadiums;
+GO
+
+------------------------------------------
+-- Función: Torneo.fn_Huso_Desde_Segundos
+-- Descripción: Convierte una diferencia con UTC expresada en segundos (como la devuelven las APIs)
+--              al formato de texto que usa la base: -10800 -> 'UTC-3', 19800 -> 'UTC+5:30', 0 -> 'UTC'.
+
+CREATE OR ALTER FUNCTION Torneo.fn_Huso_Desde_Segundos (@segundos INT)
+RETURNS VARCHAR(10)
+AS
+BEGIN
+    DECLARE @minutos_totales INT;
+    DECLARE @horas INT;
+    DECLARE @minutos INT;
+
+    IF (@segundos IS NULL OR ABS(@segundos) > 14 * 3600)
+        RETURN NULL;
+
+    IF (@segundos = 0)
+        RETURN 'UTC';
+
+    SET @minutos_totales = ABS(@segundos) / 60;
+    SET @horas = @minutos_totales / 60;
+    SET @minutos = @minutos_totales % 60;
+
+    RETURN 'UTC' + CASE WHEN @segundos < 0 THEN '-' ELSE '+' END
+         + CAST(@horas AS VARCHAR(2))
+         + CASE WHEN @minutos > 0 THEN ':' + RIGHT('0' + CAST(@minutos AS VARCHAR(2)), 2) ELSE '' END;
+END;
+GO
+
+------------------------------------------
+-- Función: Torneo.fn_Url_Encode
+-- Descripción: Codifica un texto para usarlo en la URL de una API (percent-encoding sobre UTF-8),
+--              así los nombres con tildes, eñes o espacios se envían correctamente (ej: 'Estadio Akron, Zapopan').
+-- Nota: usa una intercalación UTF-8, disponible desde SQL Server 2019.
+
+CREATE OR ALTER FUNCTION Torneo.fn_Url_Encode (@texto NVARCHAR(400))
+RETURNS VARCHAR(2000)
+AS
+BEGIN
+    DECLARE @bytes VARBINARY(1600);
+    DECLARE @resultado VARCHAR(2000) = '';
+    DECLARE @posicion INT = 1;
+    DECLARE @byte INT;
+
+    IF (@texto IS NULL)
+        RETURN NULL;
+
+    -- Bytes UTF-8 del texto
+    SET @bytes = CAST(CONVERT(VARCHAR(1600), @texto COLLATE Latin1_General_100_CI_AS_SC_UTF8) AS VARBINARY(1600));
+
+    WHILE (@posicion <= DATALENGTH(@bytes))
+    BEGIN
+        SET @byte = CAST(SUBSTRING(@bytes, @posicion, 1) AS INT);
+
+        -- Caracteres no reservados (RFC 3986): letras, dígitos y - _ . ~
+        IF ((@byte BETWEEN 48 AND 57) OR (@byte BETWEEN 65 AND 90) OR (@byte BETWEEN 97 AND 122) OR @byte IN (45, 46, 95, 126))
+            SET @resultado = @resultado + CHAR(@byte);
+        ELSE
+            SET @resultado = @resultado + '%' + CONVERT(VARCHAR(2), CAST(@byte AS BINARY(1)), 2);
+
+        SET @posicion = @posicion + 1;
+    END
+
+    RETURN @resultado;
+END;
 GO

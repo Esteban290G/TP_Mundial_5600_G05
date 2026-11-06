@@ -1,0 +1,8 @@
+key_id,stadium_id,stadium_name,city_name,country_name,stadium_capacity,stadium_wikipedia_link,city_wikipedia_link
+1,P-001,Estadio Ciudad de La Plata,La Plata,Argentina,53000,https://en.wikipedia.org/wiki/Estadio_Ciudad_de_La_Plata,https://en.wikipedia.org/wiki/La_Plata
+2,P-002,,Rosario,Argentina,41000,,https://en.wikipedia.org/wiki/Rosario
+3,P-003,Estadio Gigante de Arroyito,Rosario,Argentina,abc,,https://en.wikipedia.org/wiki/Rosario
+4,P-004,Estadio Imaginario,Ciudad Perdida,Atlantis,10000,,
+5,P-005,Estadio Monumental Antonio Vespucio Liberti,Buenos Aires,Argentina,84567,,https://en.wikipedia.org/wiki/Buenos_Aires
+6,P-006,Estadio Mario Alberto Kempes,Córdoba,Argentina,57000,,"https://en.wikipedia.org/wiki/C%C3%B3rdoba,_Argentina"
+7,P-007,Estadio Mario Alberto Kempes,Córdoba,Argentina,57500,,"https://en.wikipedia.org/wiki/C%C3%B3rdoba,_Argentina"
