@@ -1,0 +1,1345 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mundial fuente="https://en.wikipedia.org/wiki/2026_FIFA_World_Cup" fecha_extraccion="2026-11-06T22:28:51">
+  <sedes>
+    <sede estadio="AT&amp;T Stadium" ciudad="Arlington" pais_iso="USA" capacidad="80000" huso_horario="UTC-5" />
+    <sede estadio="Arrowhead Stadium" ciudad="Kansas City" pais_iso="USA" capacidad="76416" huso_horario="UTC-5" />
+    <sede estadio="BC Place" ciudad="Vancouver" pais_iso="CAN" huso_horario="UTC-7" />
+    <sede estadio="BMO Field" ciudad="Toronto" pais_iso="CAN" capacidad="28351" huso_horario="UTC-4" />
+    <sede estadio="Estadio Akron" ciudad="Zapopan" pais_iso="MEX" capacidad="49813" huso_horario="UTC-6" />
+    <sede estadio="Estadio Azteca" ciudad="Mexico City" pais_iso="MEX" capacidad="87523" huso_horario="UTC-6" />
+    <sede estadio="Estadio BBVA" ciudad="Guadalupe" pais_iso="MEX" capacidad="53529" huso_horario="UTC-6" />
+    <sede estadio="Gillette Stadium" ciudad="Foxborough" pais_iso="USA" capacidad="64628" huso_horario="UTC-4" />
+    <sede estadio="Hard Rock Stadium" ciudad="Miami Gardens" pais_iso="USA" huso_horario="UTC-4" />
+    <sede estadio="Levi's Stadium" ciudad="Santa Clara" pais_iso="USA" capacidad="68500" huso_horario="UTC-7" />
+    <sede estadio="Lincoln Financial Field" ciudad="Philadelphia" pais_iso="USA" capacidad="67594" huso_horario="UTC-4" />
+    <sede estadio="Lumen Field" ciudad="Seattle" pais_iso="USA" capacidad="68740" huso_horario="UTC-7" />
+    <sede estadio="Mercedes-Benz Stadium" ciudad="Atlanta" pais_iso="USA" capacidad="71000" huso_horario="UTC-4" />
+    <sede estadio="MetLife Stadium" ciudad="East Rutherford" pais_iso="USA" capacidad="82500" huso_horario="UTC-4" />
+    <sede estadio="NRG Stadium" ciudad="Houston" pais_iso="USA" capacidad="72220" huso_horario="UTC-5" />
+    <sede estadio="SoFi Stadium" ciudad="Inglewood" pais_iso="USA" capacidad="70240" huso_horario="UTC-7" />
+  </sedes>
+  <grupos>
+    <grupo letra="A">
+      <seleccion codigo_fifa="CZE" nombre="Czech Republic" />
+      <seleccion codigo_fifa="KOR" nombre="South Korea" />
+      <seleccion codigo_fifa="MEX" nombre="Mexico" />
+      <seleccion codigo_fifa="RSA" nombre="South Africa" />
+    </grupo>
+    <grupo letra="B">
+      <seleccion codigo_fifa="BIH" nombre="Bosnia And Herzegovina" />
+      <seleccion codigo_fifa="CAN" nombre="Canada" />
+      <seleccion codigo_fifa="QAT" nombre="Qatar" />
+      <seleccion codigo_fifa="SUI" nombre="Switzerland" />
+    </grupo>
+    <grupo letra="C">
+      <seleccion codigo_fifa="BRA" nombre="Brazil" />
+      <seleccion codigo_fifa="HAI" nombre="Haiti" />
+      <seleccion codigo_fifa="MAR" nombre="Morocco" />
+      <seleccion codigo_fifa="SCO" nombre="Scotland" />
+    </grupo>
+    <grupo letra="D">
+      <seleccion codigo_fifa="AUS" nombre="Australia" />
+      <seleccion codigo_fifa="PAR" nombre="Paraguay" />
+      <seleccion codigo_fifa="TUR" nombre="Turkey" />
+      <seleccion codigo_fifa="USA" nombre="United States" />
+    </grupo>
+    <grupo letra="E">
+      <seleccion codigo_fifa="CIV" nombre="Ivory Coast" />
+      <seleccion codigo_fifa="CUW" nombre="Curaçao" />
+      <seleccion codigo_fifa="ECU" nombre="Ecuador" />
+      <seleccion codigo_fifa="GER" nombre="Germany" />
+    </grupo>
+    <grupo letra="F">
+      <seleccion codigo_fifa="JPN" nombre="Japan" />
+      <seleccion codigo_fifa="NED" nombre="Netherlands" />
+      <seleccion codigo_fifa="SWE" nombre="Sweden" />
+      <seleccion codigo_fifa="TUN" nombre="Tunisia" />
+    </grupo>
+    <grupo letra="G">
+      <seleccion codigo_fifa="BEL" nombre="Belgium" />
+      <seleccion codigo_fifa="EGY" nombre="Egypt" />
+      <seleccion codigo_fifa="IRN" nombre="Iran" />
+      <seleccion codigo_fifa="NZL" nombre="New Zealand" />
+    </grupo>
+    <grupo letra="H">
+      <seleccion codigo_fifa="CPV" nombre="Cape Verde" />
+      <seleccion codigo_fifa="ESP" nombre="Spain" />
+      <seleccion codigo_fifa="KSA" nombre="Saudi Arabia" />
+      <seleccion codigo_fifa="URU" nombre="Uruguay" />
+    </grupo>
+    <grupo letra="I">
+      <seleccion codigo_fifa="FRA" nombre="France" />
+      <seleccion codigo_fifa="IRQ" nombre="Iraq" />
+      <seleccion codigo_fifa="NOR" nombre="Norway" />
+      <seleccion codigo_fifa="SEN" nombre="Senegal" />
+    </grupo>
+    <grupo letra="J">
+      <seleccion codigo_fifa="ALG" nombre="Algeria" />
+      <seleccion codigo_fifa="ARG" nombre="Argentina" />
+      <seleccion codigo_fifa="AUT" nombre="Austria" />
+      <seleccion codigo_fifa="JOR" nombre="Jordan" />
+    </grupo>
+    <grupo letra="K">
+      <seleccion codigo_fifa="COD" nombre="Dr Congo" />
+      <seleccion codigo_fifa="COL" nombre="Colombia" />
+      <seleccion codigo_fifa="POR" nombre="Portugal" />
+      <seleccion codigo_fifa="UZB" nombre="Uzbekistan" />
+    </grupo>
+    <grupo letra="L">
+      <seleccion codigo_fifa="CRO" nombre="Croatia" />
+      <seleccion codigo_fifa="ENG" nombre="England" />
+      <seleccion codigo_fifa="GHA" nombre="Ghana" />
+      <seleccion codigo_fifa="PAN" nombre="Panama" />
+    </grupo>
+  </grupos>
+  <partidos>
+    <partido numero="1" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="MEX">Mexico</local>
+      <visitante codigo_fifa="RSA">South Africa</visitante>
+      <fecha_hora_local>2026-06-11 13:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-11 19:00:00</fecha_hora_utc>
+      <estadio>Estadio Azteca</estadio>
+      <ciudad>Mexico City</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>80824</asistencia>
+      <arbitro>Wilton Sampaio (Brazil)</arbitro>
+    </partido>
+    <partido numero="2" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="KOR">South Korea</local>
+      <visitante codigo_fifa="CZE">Czech Republic</visitante>
+      <fecha_hora_local>2026-06-11 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-12 02:00:00</fecha_hora_utc>
+      <estadio>Estadio Akron</estadio>
+      <ciudad>Zapopan</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>44985</asistencia>
+      <arbitro>Amin Omar (Egypt)</arbitro>
+    </partido>
+    <partido numero="3" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="CZE">Czech Republic</local>
+      <visitante codigo_fifa="RSA">South Africa</visitante>
+      <fecha_hora_local>2026-06-18 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-18 16:00:00</fecha_hora_utc>
+      <estadio>Mercedes-Benz Stadium</estadio>
+      <ciudad>Atlanta</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>67442</asistencia>
+      <arbitro>Tori Penso (United States)</arbitro>
+    </partido>
+    <partido numero="4" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="MEX">Mexico</local>
+      <visitante codigo_fifa="KOR">South Korea</visitante>
+      <fecha_hora_local>2026-06-18 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-19 01:00:00</fecha_hora_utc>
+      <estadio>Estadio Akron</estadio>
+      <ciudad>Zapopan</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>45522</asistencia>
+      <arbitro>Gustavo Tejera (Uruguay)</arbitro>
+    </partido>
+    <partido numero="5" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="CZE">Czech Republic</local>
+      <visitante codigo_fifa="MEX">Mexico</visitante>
+      <fecha_hora_local>2026-06-24 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-25 01:00:00</fecha_hora_utc>
+      <estadio>Estadio Azteca</estadio>
+      <ciudad>Mexico City</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>80824</asistencia>
+      <arbitro>Yael Falcón (Argentina)</arbitro>
+    </partido>
+    <partido numero="6" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="RSA">South Africa</local>
+      <visitante codigo_fifa="KOR">South Korea</visitante>
+      <fecha_hora_local>2026-06-24 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-25 01:00:00</fecha_hora_utc>
+      <estadio>Estadio BBVA</estadio>
+      <ciudad>Guadalupe</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>51243</asistencia>
+      <arbitro>Facundo Tello (Argentina)</arbitro>
+    </partido>
+    <partido numero="7" fase="Fase de Grupos" grupo="B">
+      <local codigo_fifa="CAN">Canada</local>
+      <visitante codigo_fifa="BIH">Bosnia And Herzegovina</visitante>
+      <fecha_hora_local>2026-06-12 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-12 19:00:00</fecha_hora_utc>
+      <estadio>BMO Field</estadio>
+      <ciudad>Toronto</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>43002</asistencia>
+      <arbitro>Facundo Tello (Argentina)</arbitro>
+    </partido>
+    <partido numero="8" fase="Fase de Grupos" grupo="B">
+      <local codigo_fifa="QAT">Qatar</local>
+      <visitante codigo_fifa="SUI">Switzerland</visitante>
+      <fecha_hora_local>2026-06-13 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-13 19:00:00</fecha_hora_utc>
+      <estadio>Levi's Stadium</estadio>
+      <ciudad>Santa Clara</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>67966</asistencia>
+      <arbitro>Saíd Martínez (Honduras)</arbitro>
+    </partido>
+    <partido numero="9" fase="Fase de Grupos" grupo="B">
+      <local codigo_fifa="SUI">Switzerland</local>
+      <visitante codigo_fifa="BIH">Bosnia And Herzegovina</visitante>
+      <fecha_hora_local>2026-06-18 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-18 19:00:00</fecha_hora_utc>
+      <estadio>SoFi Stadium</estadio>
+      <ciudad>Inglewood</ciudad>
+      <goles_local>4</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>70026</asistencia>
+      <arbitro>João Pinheiro (Portugal)</arbitro>
+    </partido>
+    <partido numero="10" fase="Fase de Grupos" grupo="B">
+      <local codigo_fifa="CAN">Canada</local>
+      <visitante codigo_fifa="QAT">Qatar</visitante>
+      <fecha_hora_local>2026-06-18 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-18 22:00:00</fecha_hora_utc>
+      <estadio>BC Place</estadio>
+      <ciudad>Vancouver</ciudad>
+      <goles_local>6</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>52497</asistencia>
+      <arbitro>Cristián Garay (Chile)</arbitro>
+    </partido>
+    <partido numero="11" fase="Fase de Grupos" grupo="B">
+      <local codigo_fifa="SUI">Switzerland</local>
+      <visitante codigo_fifa="CAN">Canada</visitante>
+      <fecha_hora_local>2026-06-24 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-24 19:00:00</fecha_hora_utc>
+      <estadio>BC Place</estadio>
+      <ciudad>Vancouver</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>52497</asistencia>
+      <arbitro>Ramon Abatti (Brazil)</arbitro>
+    </partido>
+    <partido numero="12" fase="Fase de Grupos" grupo="B">
+      <local codigo_fifa="BIH">Bosnia And Herzegovina</local>
+      <visitante codigo_fifa="QAT">Qatar</visitante>
+      <fecha_hora_local>2026-06-24 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-24 19:00:00</fecha_hora_utc>
+      <estadio>Lumen Field</estadio>
+      <ciudad>Seattle</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>66925</asistencia>
+      <arbitro>Jesús Valenzuela (Venezuela)</arbitro>
+    </partido>
+    <partido numero="13" fase="Fase de Grupos" grupo="C">
+      <local codigo_fifa="BRA">Brazil</local>
+      <visitante codigo_fifa="MAR">Morocco</visitante>
+      <fecha_hora_local>2026-06-13 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-13 22:00:00</fecha_hora_utc>
+      <estadio>MetLife Stadium</estadio>
+      <ciudad>East Rutherford</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>80663</asistencia>
+      <arbitro>Slavko Vinčić (Slovenia)</arbitro>
+    </partido>
+    <partido numero="14" fase="Fase de Grupos" grupo="C">
+      <local codigo_fifa="HAI">Haiti</local>
+      <visitante codigo_fifa="SCO">Scotland</visitante>
+      <fecha_hora_local>2026-06-13 21:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-14 01:00:00</fecha_hora_utc>
+      <estadio>Gillette Stadium</estadio>
+      <ciudad>Foxborough</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>64146</asistencia>
+      <arbitro>Mustapha Ghorbal (Algeria)</arbitro>
+    </partido>
+    <partido numero="15" fase="Fase de Grupos" grupo="C">
+      <local codigo_fifa="SCO">Scotland</local>
+      <visitante codigo_fifa="MAR">Morocco</visitante>
+      <fecha_hora_local>2026-06-19 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-19 22:00:00</fecha_hora_utc>
+      <estadio>Gillette Stadium</estadio>
+      <ciudad>Foxborough</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>64146</asistencia>
+      <arbitro>Ilgiz Tantashev (Uzbekistan)</arbitro>
+    </partido>
+    <partido numero="16" fase="Fase de Grupos" grupo="C">
+      <local codigo_fifa="BRA">Brazil</local>
+      <visitante codigo_fifa="HAI">Haiti</visitante>
+      <fecha_hora_local>2026-06-19 20:30:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-20 00:30:00</fecha_hora_utc>
+      <estadio>Lincoln Financial Field</estadio>
+      <ciudad>Philadelphia</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68324</asistencia>
+      <arbitro>Alejandro Hernández Hernández (Spain)</arbitro>
+    </partido>
+    <partido numero="17" fase="Fase de Grupos" grupo="C">
+      <local codigo_fifa="SCO">Scotland</local>
+      <visitante codigo_fifa="BRA">Brazil</visitante>
+      <fecha_hora_local>2026-06-24 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-24 22:00:00</fecha_hora_utc>
+      <estadio>Hard Rock Stadium</estadio>
+      <ciudad>Miami Gardens</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>64478</asistencia>
+      <arbitro>César Arturo Ramos (Mexico)</arbitro>
+    </partido>
+    <partido numero="18" fase="Fase de Grupos" grupo="C">
+      <local codigo_fifa="MAR">Morocco</local>
+      <visitante codigo_fifa="HAI">Haiti</visitante>
+      <fecha_hora_local>2026-06-24 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-24 22:00:00</fecha_hora_utc>
+      <estadio>Mercedes-Benz Stadium</estadio>
+      <ciudad>Atlanta</ciudad>
+      <goles_local>4</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>68239</asistencia>
+      <arbitro>Danny Makkelie (Netherlands)</arbitro>
+    </partido>
+    <partido numero="19" fase="Fase de Grupos" grupo="D">
+      <local codigo_fifa="USA">United States</local>
+      <visitante codigo_fifa="PAR">Paraguay</visitante>
+      <fecha_hora_local>2026-06-12 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-13 01:00:00</fecha_hora_utc>
+      <estadio>SoFi Stadium</estadio>
+      <ciudad>Inglewood</ciudad>
+      <goles_local>4</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>70492</asistencia>
+      <arbitro>Danny Makkelie (Netherlands)</arbitro>
+    </partido>
+    <partido numero="20" fase="Fase de Grupos" grupo="D">
+      <local codigo_fifa="AUS">Australia</local>
+      <visitante codigo_fifa="TUR">Turkey</visitante>
+      <fecha_hora_local>2026-06-13 21:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-14 04:00:00</fecha_hora_utc>
+      <estadio>BC Place</estadio>
+      <ciudad>Vancouver</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>52497</asistencia>
+      <arbitro>Jesús Valenzuela (Venezuela)</arbitro>
+    </partido>
+    <partido numero="21" fase="Fase de Grupos" grupo="D">
+      <local codigo_fifa="USA">United States</local>
+      <visitante codigo_fifa="AUS">Australia</visitante>
+      <fecha_hora_local>2026-06-19 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-19 19:00:00</fecha_hora_utc>
+      <estadio>Lumen Field</estadio>
+      <ciudad>Seattle</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>66925</asistencia>
+      <arbitro>Felix Zwayer (Germany)</arbitro>
+    </partido>
+    <partido numero="22" fase="Fase de Grupos" grupo="D">
+      <local codigo_fifa="TUR">Turkey</local>
+      <visitante codigo_fifa="PAR">Paraguay</visitante>
+      <fecha_hora_local>2026-06-19 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-20 03:00:00</fecha_hora_utc>
+      <estadio>Levi's Stadium</estadio>
+      <ciudad>Santa Clara</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68827</asistencia>
+      <arbitro>Iván Barton (El Salvador)</arbitro>
+    </partido>
+    <partido numero="23" fase="Fase de Grupos" grupo="D">
+      <local codigo_fifa="TUR">Turkey</local>
+      <visitante codigo_fifa="USA">United States</visitante>
+      <fecha_hora_local>2026-06-25 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-26 02:00:00</fecha_hora_utc>
+      <estadio>SoFi Stadium</estadio>
+      <ciudad>Inglewood</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>70492</asistencia>
+      <arbitro>Mustapha Ghorbal (Algeria)</arbitro>
+    </partido>
+    <partido numero="24" fase="Fase de Grupos" grupo="D">
+      <local codigo_fifa="PAR">Paraguay</local>
+      <visitante codigo_fifa="AUS">Australia</visitante>
+      <fecha_hora_local>2026-06-25 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-26 02:00:00</fecha_hora_utc>
+      <estadio>Levi's Stadium</estadio>
+      <ciudad>Santa Clara</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68827</asistencia>
+      <arbitro>Clément Turpin (France)</arbitro>
+    </partido>
+    <partido numero="25" fase="Fase de Grupos" grupo="E">
+      <local codigo_fifa="GER">Germany</local>
+      <visitante codigo_fifa="CUW">Curaçao</visitante>
+      <fecha_hora_local>2026-06-14 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-14 17:00:00</fecha_hora_utc>
+      <estadio>NRG Stadium</estadio>
+      <ciudad>Houston</ciudad>
+      <goles_local>7</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68021</asistencia>
+      <arbitro>Jalal Jayed (Morocco)</arbitro>
+    </partido>
+    <partido numero="26" fase="Fase de Grupos" grupo="E">
+      <local codigo_fifa="CIV">Ivory Coast</local>
+      <visitante codigo_fifa="ECU">Ecuador</visitante>
+      <fecha_hora_local>2026-06-14 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-14 23:00:00</fecha_hora_utc>
+      <estadio>Lincoln Financial Field</estadio>
+      <ciudad>Philadelphia</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68274</asistencia>
+      <arbitro>François Letexier (France)</arbitro>
+    </partido>
+    <partido numero="27" fase="Fase de Grupos" grupo="E">
+      <local codigo_fifa="GER">Germany</local>
+      <visitante codigo_fifa="CIV">Ivory Coast</visitante>
+      <fecha_hora_local>2026-06-20 16:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-20 20:00:00</fecha_hora_utc>
+      <estadio>BMO Field</estadio>
+      <ciudad>Toronto</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>43036</asistencia>
+      <arbitro>Juan Gabriel Benítez (Paraguay)</arbitro>
+    </partido>
+    <partido numero="28" fase="Fase de Grupos" grupo="E">
+      <local codigo_fifa="ECU">Ecuador</local>
+      <visitante codigo_fifa="CUW">Curaçao</visitante>
+      <fecha_hora_local>2026-06-20 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-21 00:00:00</fecha_hora_utc>
+      <estadio>Arrowhead Stadium</estadio>
+      <ciudad>Kansas City</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68598</asistencia>
+      <arbitro>Ma Ning (China)</arbitro>
+    </partido>
+    <partido numero="29" fase="Fase de Grupos" grupo="E">
+      <local codigo_fifa="CUW">Curaçao</local>
+      <visitante codigo_fifa="CIV">Ivory Coast</visitante>
+      <fecha_hora_local>2026-06-25 16:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-25 20:00:00</fecha_hora_utc>
+      <estadio>Lincoln Financial Field</estadio>
+      <ciudad>Philadelphia</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>68324</asistencia>
+      <arbitro>Glenn Nyberg (Sweden)</arbitro>
+    </partido>
+    <partido numero="30" fase="Fase de Grupos" grupo="E">
+      <local codigo_fifa="ECU">Ecuador</local>
+      <visitante codigo_fifa="GER">Germany</visitante>
+      <fecha_hora_local>2026-06-25 16:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-25 20:00:00</fecha_hora_utc>
+      <estadio>MetLife Stadium</estadio>
+      <ciudad>East Rutherford</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>80663</asistencia>
+      <arbitro>Tori Penso (United States)</arbitro>
+    </partido>
+    <partido numero="31" fase="Fase de Grupos" grupo="F">
+      <local codigo_fifa="NED">Netherlands</local>
+      <visitante codigo_fifa="JPN">Japan</visitante>
+      <fecha_hora_local>2026-06-14 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-14 20:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>69285</asistencia>
+      <arbitro>Ismail Elfath (United States)</arbitro>
+    </partido>
+    <partido numero="32" fase="Fase de Grupos" grupo="F">
+      <local codigo_fifa="SWE">Sweden</local>
+      <visitante codigo_fifa="TUN">Tunisia</visitante>
+      <fecha_hora_local>2026-06-14 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-15 02:00:00</fecha_hora_utc>
+      <estadio>Estadio BBVA</estadio>
+      <ciudad>Guadalupe</ciudad>
+      <goles_local>5</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>50987</asistencia>
+      <arbitro>Yael Falcón (Argentina)</arbitro>
+    </partido>
+    <partido numero="33" fase="Fase de Grupos" grupo="F">
+      <local codigo_fifa="NED">Netherlands</local>
+      <visitante codigo_fifa="SWE">Sweden</visitante>
+      <fecha_hora_local>2026-06-20 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-20 17:00:00</fecha_hora_utc>
+      <estadio>NRG Stadium</estadio>
+      <ciudad>Houston</ciudad>
+      <goles_local>5</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68777</asistencia>
+      <arbitro>Michael Oliver (England)</arbitro>
+    </partido>
+    <partido numero="34" fase="Fase de Grupos" grupo="F">
+      <local codigo_fifa="TUN">Tunisia</local>
+      <visitante codigo_fifa="JPN">Japan</visitante>
+      <fecha_hora_local>2026-06-20 22:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-21 04:00:00</fecha_hora_utc>
+      <estadio>Estadio BBVA</estadio>
+      <ciudad>Guadalupe</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>4</goles_visitante>
+      <asistencia>51243</asistencia>
+      <arbitro>István Kovács (Romania)</arbitro>
+    </partido>
+    <partido numero="35" fase="Fase de Grupos" grupo="F">
+      <local codigo_fifa="JPN">Japan</local>
+      <visitante codigo_fifa="SWE">Sweden</visitante>
+      <fecha_hora_local>2026-06-25 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-25 23:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>70137</asistencia>
+      <arbitro>Iván Barton (El Salvador)</arbitro>
+    </partido>
+    <partido numero="36" fase="Fase de Grupos" grupo="F">
+      <local codigo_fifa="TUN">Tunisia</local>
+      <visitante codigo_fifa="NED">Netherlands</visitante>
+      <fecha_hora_local>2026-06-25 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-25 23:00:00</fecha_hora_utc>
+      <estadio>Arrowhead Stadium</estadio>
+      <ciudad>Kansas City</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>68391</asistencia>
+      <arbitro>Katia Itzel García (Mexico)</arbitro>
+    </partido>
+    <partido numero="37" fase="Fase de Grupos" grupo="G">
+      <local codigo_fifa="BEL">Belgium</local>
+      <visitante codigo_fifa="EGY">Egypt</visitante>
+      <fecha_hora_local>2026-06-15 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-15 19:00:00</fecha_hora_utc>
+      <estadio>Lumen Field</estadio>
+      <ciudad>Seattle</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>66775</asistencia>
+      <arbitro>Ramon Abatti (Brazil)</arbitro>
+    </partido>
+    <partido numero="38" fase="Fase de Grupos" grupo="G">
+      <local codigo_fifa="IRN">Iran</local>
+      <visitante codigo_fifa="NZL">New Zealand</visitante>
+      <fecha_hora_local>2026-06-15 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-16 01:00:00</fecha_hora_utc>
+      <estadio>SoFi Stadium</estadio>
+      <ciudad>Inglewood</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>70108</asistencia>
+      <arbitro>César Arturo Ramos (Mexico)</arbitro>
+    </partido>
+    <partido numero="39" fase="Fase de Grupos" grupo="G">
+      <local codigo_fifa="BEL">Belgium</local>
+      <visitante codigo_fifa="IRN">Iran</visitante>
+      <fecha_hora_local>2026-06-21 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-21 19:00:00</fecha_hora_utc>
+      <estadio>SoFi Stadium</estadio>
+      <ciudad>Inglewood</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>70317</asistencia>
+      <arbitro>Darío Herrera (Argentina)</arbitro>
+    </partido>
+    <partido numero="40" fase="Fase de Grupos" grupo="G">
+      <local codigo_fifa="NZL">New Zealand</local>
+      <visitante codigo_fifa="EGY">Egypt</visitante>
+      <fecha_hora_local>2026-06-21 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-22 01:00:00</fecha_hora_utc>
+      <estadio>BC Place</estadio>
+      <ciudad>Vancouver</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>52497</asistencia>
+      <arbitro>Omar Al Ali (United Arab Emirates)</arbitro>
+    </partido>
+    <partido numero="41" fase="Fase de Grupos" grupo="G">
+      <local codigo_fifa="EGY">Egypt</local>
+      <visitante codigo_fifa="IRN">Iran</visitante>
+      <fecha_hora_local>2026-06-26 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-27 03:00:00</fecha_hora_utc>
+      <estadio>Lumen Field</estadio>
+      <ciudad>Seattle</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>66925</asistencia>
+      <arbitro>Szymon Marciniak (Poland)</arbitro>
+    </partido>
+    <partido numero="42" fase="Fase de Grupos" grupo="G">
+      <local codigo_fifa="NZL">New Zealand</local>
+      <visitante codigo_fifa="BEL">Belgium</visitante>
+      <fecha_hora_local>2026-06-26 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-27 03:00:00</fecha_hora_utc>
+      <estadio>BC Place</estadio>
+      <ciudad>Vancouver</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>5</goles_visitante>
+      <asistencia>52497</asistencia>
+      <arbitro>Adham Makhadmeh (Jordan)</arbitro>
+    </partido>
+    <partido numero="43" fase="Fase de Grupos" grupo="H">
+      <local codigo_fifa="ESP">Spain</local>
+      <visitante codigo_fifa="CPV">Cape Verde</visitante>
+      <fecha_hora_local>2026-06-15 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-15 16:00:00</fecha_hora_utc>
+      <estadio>Mercedes-Benz Stadium</estadio>
+      <ciudad>Atlanta</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>67640</asistencia>
+      <arbitro>Adham Makhadmeh (Jordan)</arbitro>
+    </partido>
+    <partido numero="44" fase="Fase de Grupos" grupo="H">
+      <local codigo_fifa="KSA">Saudi Arabia</local>
+      <visitante codigo_fifa="URU">Uruguay</visitante>
+      <fecha_hora_local>2026-06-15 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-15 22:00:00</fecha_hora_utc>
+      <estadio>Hard Rock Stadium</estadio>
+      <ciudad>Miami Gardens</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>62764</asistencia>
+      <arbitro>Maurizio Mariani (Italy)</arbitro>
+    </partido>
+    <partido numero="45" fase="Fase de Grupos" grupo="H">
+      <local codigo_fifa="ESP">Spain</local>
+      <visitante codigo_fifa="KSA">Saudi Arabia</visitante>
+      <fecha_hora_local>2026-06-21 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-21 16:00:00</fecha_hora_utc>
+      <estadio>Mercedes-Benz Stadium</estadio>
+      <ciudad>Atlanta</ciudad>
+      <goles_local>4</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68239</asistencia>
+      <arbitro>Raphael Claus (Brazil)</arbitro>
+    </partido>
+    <partido numero="46" fase="Fase de Grupos" grupo="H">
+      <local codigo_fifa="URU">Uruguay</local>
+      <visitante codigo_fifa="CPV">Cape Verde</visitante>
+      <fecha_hora_local>2026-06-21 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-21 22:00:00</fecha_hora_utc>
+      <estadio>Hard Rock Stadium</estadio>
+      <ciudad>Miami Gardens</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>64003</asistencia>
+      <arbitro>Espen Eskås (Norway)</arbitro>
+    </partido>
+    <partido numero="47" fase="Fase de Grupos" grupo="H">
+      <local codigo_fifa="URU">Uruguay</local>
+      <visitante codigo_fifa="ESP">Spain</visitante>
+      <fecha_hora_local>2026-06-26 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-27 00:00:00</fecha_hora_utc>
+      <estadio>Estadio Akron</estadio>
+      <ciudad>Zapopan</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>45065</asistencia>
+      <arbitro>Ismail Elfath (United States)</arbitro>
+    </partido>
+    <partido numero="48" fase="Fase de Grupos" grupo="H">
+      <local codigo_fifa="CPV">Cape Verde</local>
+      <visitante codigo_fifa="KSA">Saudi Arabia</visitante>
+      <fecha_hora_local>2026-06-26 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-27 00:00:00</fecha_hora_utc>
+      <estadio>NRG Stadium</estadio>
+      <ciudad>Houston</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68278</asistencia>
+      <arbitro>François Letexier (France)</arbitro>
+    </partido>
+    <partido numero="49" fase="Fase de Grupos" grupo="I">
+      <local codigo_fifa="FRA">France</local>
+      <visitante codigo_fifa="SEN">Senegal</visitante>
+      <fecha_hora_local>2026-06-16 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-16 19:00:00</fecha_hora_utc>
+      <estadio>MetLife Stadium</estadio>
+      <ciudad>East Rutherford</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>80545</asistencia>
+      <arbitro>Alireza Faghani (Australia)</arbitro>
+    </partido>
+    <partido numero="50" fase="Fase de Grupos" grupo="I">
+      <local codigo_fifa="IRQ">Iraq</local>
+      <visitante codigo_fifa="NOR">Norway</visitante>
+      <fecha_hora_local>2026-06-16 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-16 22:00:00</fecha_hora_utc>
+      <estadio>Gillette Stadium</estadio>
+      <ciudad>Foxborough</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>4</goles_visitante>
+      <asistencia>63106</asistencia>
+      <arbitro>Pierre Atcho (Gabon)</arbitro>
+    </partido>
+    <partido numero="51" fase="Fase de Grupos" grupo="I">
+      <local codigo_fifa="FRA">France</local>
+      <visitante codigo_fifa="IRQ">Iraq</visitante>
+      <fecha_hora_local>2026-06-22 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-22 21:00:00</fecha_hora_utc>
+      <estadio>Lincoln Financial Field</estadio>
+      <ciudad>Philadelphia</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68324</asistencia>
+      <arbitro>Drew Fischer (Canada)</arbitro>
+    </partido>
+    <partido numero="52" fase="Fase de Grupos" grupo="I">
+      <local codigo_fifa="NOR">Norway</local>
+      <visitante codigo_fifa="SEN">Senegal</visitante>
+      <fecha_hora_local>2026-06-22 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-23 00:00:00</fecha_hora_utc>
+      <estadio>MetLife Stadium</estadio>
+      <ciudad>East Rutherford</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>80663</asistencia>
+      <arbitro>Wilton Sampaio (Brazil)</arbitro>
+    </partido>
+    <partido numero="53" fase="Fase de Grupos" grupo="I">
+      <local codigo_fifa="NOR">Norway</local>
+      <visitante codigo_fifa="FRA">France</visitante>
+      <fecha_hora_local>2026-06-26 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-26 19:00:00</fecha_hora_utc>
+      <estadio>Gillette Stadium</estadio>
+      <ciudad>Foxborough</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>4</goles_visitante>
+      <asistencia>64146</asistencia>
+      <arbitro>Michael Oliver (England)</arbitro>
+    </partido>
+    <partido numero="54" fase="Fase de Grupos" grupo="I">
+      <local codigo_fifa="SEN">Senegal</local>
+      <visitante codigo_fifa="IRQ">Iraq</visitante>
+      <fecha_hora_local>2026-06-26 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-26 19:00:00</fecha_hora_utc>
+      <estadio>BMO Field</estadio>
+      <ciudad>Toronto</ciudad>
+      <goles_local>5</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>43036</asistencia>
+      <arbitro>Anthony Taylor (England)</arbitro>
+    </partido>
+    <partido numero="55" fase="Fase de Grupos" grupo="J">
+      <local codigo_fifa="ARG">Argentina</local>
+      <visitante codigo_fifa="ALG">Algeria</visitante>
+      <fecha_hora_local>2026-06-16 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-17 01:00:00</fecha_hora_utc>
+      <estadio>Arrowhead Stadium</estadio>
+      <ciudad>Kansas City</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>69045</asistencia>
+      <arbitro>Szymon Marciniak (Poland)</arbitro>
+    </partido>
+    <partido numero="56" fase="Fase de Grupos" grupo="J">
+      <local codigo_fifa="AUT">Austria</local>
+      <visitante codigo_fifa="JOR">Jordan</visitante>
+      <fecha_hora_local>2026-06-16 21:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-17 04:00:00</fecha_hora_utc>
+      <estadio>Levi's Stadium</estadio>
+      <ciudad>Santa Clara</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68527</asistencia>
+      <arbitro>Dahane Beida (Mauritania)</arbitro>
+    </partido>
+    <partido numero="57" fase="Fase de Grupos" grupo="J">
+      <local codigo_fifa="ARG">Argentina</local>
+      <visitante codigo_fifa="AUT">Austria</visitante>
+      <fecha_hora_local>2026-06-22 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-22 17:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>70649</asistencia>
+      <arbitro>Amin Omar (Egypt)</arbitro>
+    </partido>
+    <partido numero="58" fase="Fase de Grupos" grupo="J">
+      <local codigo_fifa="JOR">Jordan</local>
+      <visitante codigo_fifa="ALG">Algeria</visitante>
+      <fecha_hora_local>2026-06-22 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-23 03:00:00</fecha_hora_utc>
+      <estadio>Levi's Stadium</estadio>
+      <ciudad>Santa Clara</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>68371</asistencia>
+      <arbitro>Slavko Vinčić (Slovenia)</arbitro>
+    </partido>
+    <partido numero="59" fase="Fase de Grupos" grupo="J">
+      <local codigo_fifa="ALG">Algeria</local>
+      <visitante codigo_fifa="AUT">Austria</visitante>
+      <fecha_hora_local>2026-06-27 21:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-28 02:00:00</fecha_hora_utc>
+      <estadio>Arrowhead Stadium</estadio>
+      <ciudad>Kansas City</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>69045</asistencia>
+      <arbitro>Ilgiz Tantashev (Uzbekistan)</arbitro>
+    </partido>
+    <partido numero="60" fase="Fase de Grupos" grupo="J">
+      <local codigo_fifa="JOR">Jordan</local>
+      <visitante codigo_fifa="ARG">Argentina</visitante>
+      <fecha_hora_local>2026-06-27 21:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-28 02:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>70649</asistencia>
+      <arbitro>István Kovács (Romania)</arbitro>
+    </partido>
+    <partido numero="61" fase="Fase de Grupos" grupo="K">
+      <local codigo_fifa="POR">Portugal</local>
+      <visitante codigo_fifa="COD">Dr Congo</visitante>
+      <fecha_hora_local>2026-06-17 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-17 17:00:00</fecha_hora_utc>
+      <estadio>NRG Stadium</estadio>
+      <ciudad>Houston</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68777</asistencia>
+      <arbitro>Abdulrahman Al-Jassim (Qatar)</arbitro>
+    </partido>
+    <partido numero="62" fase="Fase de Grupos" grupo="K">
+      <local codigo_fifa="UZB">Uzbekistan</local>
+      <visitante codigo_fifa="COL">Colombia</visitante>
+      <fecha_hora_local>2026-06-17 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-18 02:00:00</fecha_hora_utc>
+      <estadio>Estadio Azteca</estadio>
+      <ciudad>Mexico City</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>80824</asistencia>
+      <arbitro>Anthony Taylor (England)</arbitro>
+    </partido>
+    <partido numero="63" fase="Fase de Grupos" grupo="K">
+      <local codigo_fifa="POR">Portugal</local>
+      <visitante codigo_fifa="UZB">Uzbekistan</visitante>
+      <fecha_hora_local>2026-06-23 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-23 17:00:00</fecha_hora_utc>
+      <estadio>NRG Stadium</estadio>
+      <ciudad>Houston</ciudad>
+      <goles_local>5</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68777</asistencia>
+      <arbitro>Jalal Jayed (Morocco)</arbitro>
+    </partido>
+    <partido numero="64" fase="Fase de Grupos" grupo="K">
+      <local codigo_fifa="COL">Colombia</local>
+      <visitante codigo_fifa="COD">Dr Congo</visitante>
+      <fecha_hora_local>2026-06-23 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-24 02:00:00</fecha_hora_utc>
+      <estadio>Estadio Akron</estadio>
+      <ciudad>Zapopan</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>45358</asistencia>
+      <arbitro>Maurizio Mariani (Italy)</arbitro>
+    </partido>
+    <partido numero="65" fase="Fase de Grupos" grupo="K">
+      <local codigo_fifa="COL">Colombia</local>
+      <visitante codigo_fifa="POR">Portugal</visitante>
+      <fecha_hora_local>2026-06-27 19:30:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-27 23:30:00</fecha_hora_utc>
+      <estadio>Hard Rock Stadium</estadio>
+      <ciudad>Miami Gardens</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>64478</asistencia>
+      <arbitro>Alireza Faghani (Australia)</arbitro>
+    </partido>
+    <partido numero="66" fase="Fase de Grupos" grupo="K">
+      <local codigo_fifa="COD">Dr Congo</local>
+      <visitante codigo_fifa="UZB">Uzbekistan</visitante>
+      <fecha_hora_local>2026-06-27 19:30:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-27 23:30:00</fecha_hora_utc>
+      <estadio>Mercedes-Benz Stadium</estadio>
+      <ciudad>Atlanta</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68239</asistencia>
+      <arbitro>Felix Zwayer (Germany)</arbitro>
+    </partido>
+    <partido numero="67" fase="Fase de Grupos" grupo="L">
+      <local codigo_fifa="ENG">England</local>
+      <visitante codigo_fifa="CRO">Croatia</visitante>
+      <fecha_hora_local>2026-06-17 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-17 20:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>4</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>70389</asistencia>
+      <arbitro>Clément Turpin (France)</arbitro>
+    </partido>
+    <partido numero="68" fase="Fase de Grupos" grupo="L">
+      <local codigo_fifa="GHA">Ghana</local>
+      <visitante codigo_fifa="PAN">Panama</visitante>
+      <fecha_hora_local>2026-06-17 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-17 23:00:00</fecha_hora_utc>
+      <estadio>BMO Field</estadio>
+      <ciudad>Toronto</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>42942</asistencia>
+      <arbitro>Glenn Nyberg (Sweden)</arbitro>
+    </partido>
+    <partido numero="69" fase="Fase de Grupos" grupo="L">
+      <local codigo_fifa="ENG">England</local>
+      <visitante codigo_fifa="GHA">Ghana</visitante>
+      <fecha_hora_local>2026-06-23 16:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-23 20:00:00</fecha_hora_utc>
+      <estadio>Gillette Stadium</estadio>
+      <ciudad>Foxborough</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>63983</asistencia>
+      <arbitro>Saíd Martínez (Honduras)</arbitro>
+    </partido>
+    <partido numero="70" fase="Fase de Grupos" grupo="L">
+      <local codigo_fifa="PAN">Panama</local>
+      <visitante codigo_fifa="CRO">Croatia</visitante>
+      <fecha_hora_local>2026-06-23 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-23 23:00:00</fecha_hora_utc>
+      <estadio>BMO Field</estadio>
+      <ciudad>Toronto</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>43036</asistencia>
+      <arbitro>Pierre Atcho (Gabon)</arbitro>
+    </partido>
+    <partido numero="71" fase="Fase de Grupos" grupo="L">
+      <local codigo_fifa="PAN">Panama</local>
+      <visitante codigo_fifa="ENG">England</visitante>
+      <fecha_hora_local>2026-06-27 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-27 21:00:00</fecha_hora_utc>
+      <estadio>MetLife Stadium</estadio>
+      <ciudad>East Rutherford</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>80663</asistencia>
+      <arbitro>Abdulrahman Al-Jassim (Qatar)</arbitro>
+    </partido>
+    <partido numero="72" fase="Fase de Grupos" grupo="L">
+      <local codigo_fifa="CRO">Croatia</local>
+      <visitante codigo_fifa="GHA">Ghana</visitante>
+      <fecha_hora_local>2026-06-27 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-27 21:00:00</fecha_hora_utc>
+      <estadio>Lincoln Financial Field</estadio>
+      <ciudad>Philadelphia</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68324</asistencia>
+      <arbitro>Drew Fischer (Canada)</arbitro>
+    </partido>
+    <partido numero="73" fase="Dieciseisavos de final">
+      <local codigo_fifa="RSA">South Africa</local>
+      <visitante codigo_fifa="CAN">Canada</visitante>
+      <fecha_hora_local>2026-06-28 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-28 19:00:00</fecha_hora_utc>
+      <estadio>SoFi Stadium</estadio>
+      <ciudad>Inglewood</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>69237</asistencia>
+      <arbitro>João Pinheiro (Portugal)</arbitro>
+    </partido>
+    <partido numero="74" fase="Dieciseisavos de final">
+      <local codigo_fifa="BRA">Brazil</local>
+      <visitante codigo_fifa="JPN">Japan</visitante>
+      <fecha_hora_local>2026-06-29 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-29 17:00:00</fecha_hora_utc>
+      <estadio>NRG Stadium</estadio>
+      <ciudad>Houston</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68777</asistencia>
+      <arbitro>Maurizio Mariani (Italy)</arbitro>
+    </partido>
+    <partido numero="75" fase="Dieciseisavos de final">
+      <local codigo_fifa="GER">Germany</local>
+      <visitante codigo_fifa="PAR">Paraguay</visitante>
+      <fecha_hora_local>2026-06-29 16:30:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-29 20:30:00</fecha_hora_utc>
+      <estadio>Gillette Stadium</estadio>
+      <ciudad>Foxborough</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>63945</asistencia>
+      <arbitro>Jalal Jayed (Morocco)</arbitro>
+    </partido>
+    <partido numero="76" fase="Dieciseisavos de final">
+      <local codigo_fifa="NED">Netherlands</local>
+      <visitante codigo_fifa="MAR">Morocco</visitante>
+      <fecha_hora_local>2026-06-29 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-30 01:00:00</fecha_hora_utc>
+      <estadio>Estadio BBVA</estadio>
+      <ciudad>Guadalupe</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>51243</asistencia>
+      <arbitro>Wilton Sampaio (Brazil)</arbitro>
+    </partido>
+    <partido numero="77" fase="Dieciseisavos de final">
+      <local codigo_fifa="CIV">Ivory Coast</local>
+      <visitante codigo_fifa="NOR">Norway</visitante>
+      <fecha_hora_local>2026-06-30 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-30 17:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>69665</asistencia>
+      <arbitro>Jesús Valenzuela (Venezuela)</arbitro>
+    </partido>
+    <partido numero="78" fase="Dieciseisavos de final">
+      <local codigo_fifa="FRA">France</local>
+      <visitante codigo_fifa="SWE">Sweden</visitante>
+      <fecha_hora_local>2026-06-30 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-30 21:00:00</fecha_hora_utc>
+      <estadio>MetLife Stadium</estadio>
+      <ciudad>East Rutherford</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>80663</asistencia>
+      <arbitro>Danny Makkelie (Netherlands)</arbitro>
+    </partido>
+    <partido numero="79" fase="Dieciseisavos de final">
+      <local codigo_fifa="MEX">Mexico</local>
+      <visitante codigo_fifa="ECU">Ecuador</visitante>
+      <fecha_hora_local>2026-06-30 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-01 02:00:00</fecha_hora_utc>
+      <estadio>Estadio Azteca</estadio>
+      <ciudad>Mexico City</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>80824</asistencia>
+      <arbitro>Slavko Vinčić (Slovenia)</arbitro>
+    </partido>
+    <partido numero="80" fase="Dieciseisavos de final">
+      <local codigo_fifa="ENG">England</local>
+      <visitante codigo_fifa="COD">Dr Congo</visitante>
+      <fecha_hora_local>2026-07-01 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-01 16:00:00</fecha_hora_utc>
+      <estadio>Mercedes-Benz Stadium</estadio>
+      <ciudad>Atlanta</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68239</asistencia>
+      <arbitro>Adham Makhadmeh (Jordan)</arbitro>
+    </partido>
+    <partido numero="81" fase="Dieciseisavos de final">
+      <local codigo_fifa="BEL">Belgium</local>
+      <visitante codigo_fifa="SEN">Senegal</visitante>
+      <fecha_hora_local>2026-07-01 13:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-01 20:00:00</fecha_hora_utc>
+      <estadio>Lumen Field</estadio>
+      <ciudad>Seattle</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>66925</asistencia>
+      <arbitro>Saíd Martínez (Honduras)</arbitro>
+    </partido>
+    <partido numero="82" fase="Dieciseisavos de final">
+      <local codigo_fifa="USA">United States</local>
+      <visitante codigo_fifa="BIH">Bosnia And Herzegovina</visitante>
+      <fecha_hora_local>2026-07-01 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-02 00:00:00</fecha_hora_utc>
+      <estadio>Levi's Stadium</estadio>
+      <ciudad>Santa Clara</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>68827</asistencia>
+      <arbitro>Raphael Claus (Brazil)</arbitro>
+    </partido>
+    <partido numero="83" fase="Dieciseisavos de final">
+      <local codigo_fifa="ESP">Spain</local>
+      <visitante codigo_fifa="AUT">Austria</visitante>
+      <fecha_hora_local>2026-07-02 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-02 19:00:00</fecha_hora_utc>
+      <estadio>SoFi Stadium</estadio>
+      <ciudad>Inglewood</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>70492</asistencia>
+      <arbitro>Glenn Nyberg (Sweden)</arbitro>
+    </partido>
+    <partido numero="84" fase="Dieciseisavos de final">
+      <local codigo_fifa="POR">Portugal</local>
+      <visitante codigo_fifa="CRO">Croatia</visitante>
+      <fecha_hora_local>2026-07-02 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-02 23:00:00</fecha_hora_utc>
+      <estadio>BMO Field</estadio>
+      <ciudad>Toronto</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>43036</asistencia>
+      <arbitro>Espen Eskås (Norway)</arbitro>
+    </partido>
+    <partido numero="85" fase="Dieciseisavos de final">
+      <local codigo_fifa="SUI">Switzerland</local>
+      <visitante codigo_fifa="ALG">Algeria</visitante>
+      <fecha_hora_local>2026-07-02 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-03 03:00:00</fecha_hora_utc>
+      <estadio>BC Place</estadio>
+      <ciudad>Vancouver</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>52497</asistencia>
+      <arbitro>Yael Falcón (Argentina)</arbitro>
+    </partido>
+    <partido numero="86" fase="Dieciseisavos de final">
+      <local codigo_fifa="AUS">Australia</local>
+      <visitante codigo_fifa="EGY">Egypt</visitante>
+      <fecha_hora_local>2026-07-03 13:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-03 18:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>70244</asistencia>
+      <arbitro>Gustavo Tejera (Uruguay)</arbitro>
+    </partido>
+    <partido numero="87" fase="Dieciseisavos de final">
+      <local codigo_fifa="ARG">Argentina</local>
+      <visitante codigo_fifa="CPV">Cape Verde</visitante>
+      <fecha_hora_local>2026-07-03 18:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-03 22:00:00</fecha_hora_utc>
+      <estadio>Hard Rock Stadium</estadio>
+      <ciudad>Miami Gardens</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>64478</asistencia>
+      <arbitro>Drew Fischer (Canada)</arbitro>
+    </partido>
+    <partido numero="88" fase="Dieciseisavos de final">
+      <local codigo_fifa="COL">Colombia</local>
+      <visitante codigo_fifa="GHA">Ghana</visitante>
+      <fecha_hora_local>2026-07-03 20:30:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-04 01:30:00</fecha_hora_utc>
+      <estadio>Arrowhead Stadium</estadio>
+      <ciudad>Kansas City</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>69045</asistencia>
+      <arbitro>Clément Turpin (France)</arbitro>
+    </partido>
+    <partido numero="89" fase="Octavos de final">
+      <local codigo_fifa="CAN">Canada</local>
+      <visitante codigo_fifa="MAR">Morocco</visitante>
+      <fecha_hora_local>2026-07-04 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-04 17:00:00</fecha_hora_utc>
+      <estadio>NRG Stadium</estadio>
+      <ciudad>Houston</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>68777</asistencia>
+      <arbitro>Michael Oliver (England)</arbitro>
+    </partido>
+    <partido numero="90" fase="Octavos de final">
+      <local codigo_fifa="PAR">Paraguay</local>
+      <visitante codigo_fifa="FRA">France</visitante>
+      <fecha_hora_local>2026-07-04 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-04 21:00:00</fecha_hora_utc>
+      <estadio>Lincoln Financial Field</estadio>
+      <ciudad>Philadelphia</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>68324</asistencia>
+      <arbitro>Ilgiz Tantashev (Uzbekistan)</arbitro>
+    </partido>
+    <partido numero="91" fase="Octavos de final">
+      <local codigo_fifa="BRA">Brazil</local>
+      <visitante codigo_fifa="NOR">Norway</visitante>
+      <fecha_hora_local>2026-07-05 16:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-05 20:00:00</fecha_hora_utc>
+      <estadio>MetLife Stadium</estadio>
+      <ciudad>East Rutherford</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>80663</asistencia>
+      <arbitro>Ismail Elfath (United States)</arbitro>
+    </partido>
+    <partido numero="92" fase="Octavos de final">
+      <local codigo_fifa="MEX">Mexico</local>
+      <visitante codigo_fifa="ENG">England</visitante>
+      <fecha_hora_local>2026-07-05 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-06 01:00:00</fecha_hora_utc>
+      <estadio>Estadio Azteca</estadio>
+      <ciudad>Mexico City</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>3</goles_visitante>
+      <asistencia>80824</asistencia>
+      <arbitro>Alireza Faghani (Australia)</arbitro>
+    </partido>
+    <partido numero="93" fase="Octavos de final">
+      <local codigo_fifa="POR">Portugal</local>
+      <visitante codigo_fifa="ESP">Spain</visitante>
+      <fecha_hora_local>2026-07-06 14:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-06 19:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>70649</asistencia>
+      <arbitro>Anthony Taylor (England)</arbitro>
+    </partido>
+    <partido numero="94" fase="Octavos de final">
+      <local codigo_fifa="USA">United States</local>
+      <visitante codigo_fifa="BEL">Belgium</visitante>
+      <fecha_hora_local>2026-07-06 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-07 00:00:00</fecha_hora_utc>
+      <estadio>Lumen Field</estadio>
+      <ciudad>Seattle</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>4</goles_visitante>
+      <asistencia>66925</asistencia>
+      <arbitro>Adham Makhadmeh (Jordan)</arbitro>
+    </partido>
+    <partido numero="95" fase="Octavos de final">
+      <local codigo_fifa="ARG">Argentina</local>
+      <visitante codigo_fifa="EGY">Egypt</visitante>
+      <fecha_hora_local>2026-07-07 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-07 16:00:00</fecha_hora_utc>
+      <estadio>Mercedes-Benz Stadium</estadio>
+      <ciudad>Atlanta</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>68239</asistencia>
+      <arbitro>François Letexier (France)</arbitro>
+    </partido>
+    <partido numero="96" fase="Octavos de final">
+      <local codigo_fifa="SUI">Switzerland</local>
+      <visitante codigo_fifa="COL">Colombia</visitante>
+      <fecha_hora_local>2026-07-07 13:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-07 20:00:00</fecha_hora_utc>
+      <estadio>BC Place</estadio>
+      <ciudad>Vancouver</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>52497</asistencia>
+      <arbitro>Iván Barton (El Salvador)</arbitro>
+    </partido>
+    <partido numero="97" fase="Cuartos de final">
+      <local codigo_fifa="FRA">France</local>
+      <visitante codigo_fifa="MAR">Morocco</visitante>
+      <fecha_hora_local>2026-07-09 16:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-09 20:00:00</fecha_hora_utc>
+      <estadio>Gillette Stadium</estadio>
+      <ciudad>Foxborough</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>63811</asistencia>
+      <arbitro>Facundo Tello (Argentina)</arbitro>
+    </partido>
+    <partido numero="98" fase="Cuartos de final">
+      <local codigo_fifa="ESP">Spain</local>
+      <visitante codigo_fifa="BEL">Belgium</visitante>
+      <fecha_hora_local>2026-07-10 12:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-10 19:00:00</fecha_hora_utc>
+      <estadio>SoFi Stadium</estadio>
+      <ciudad>Inglewood</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>70492</asistencia>
+      <arbitro>Michael Oliver (England)</arbitro>
+    </partido>
+    <partido numero="99" fase="Cuartos de final">
+      <local codigo_fifa="NOR">Norway</local>
+      <visitante codigo_fifa="ENG">England</visitante>
+      <fecha_hora_local>2026-07-11 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-11 21:00:00</fecha_hora_utc>
+      <estadio>Hard Rock Stadium</estadio>
+      <ciudad>Miami Gardens</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>64478</asistencia>
+      <arbitro>Clément Turpin (France)</arbitro>
+    </partido>
+    <partido numero="100" fase="Cuartos de final">
+      <local codigo_fifa="ARG">Argentina</local>
+      <visitante codigo_fifa="SUI">Switzerland</visitante>
+      <fecha_hora_local>2026-07-11 20:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-12 01:00:00</fecha_hora_utc>
+      <estadio>Arrowhead Stadium</estadio>
+      <ciudad>Kansas City</ciudad>
+      <goles_local>3</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>69045</asistencia>
+      <arbitro>João Pinheiro (Portugal)</arbitro>
+    </partido>
+    <partido numero="101" fase="Semifinales">
+      <local codigo_fifa="FRA">France</local>
+      <visitante codigo_fifa="ESP">Spain</visitante>
+      <fecha_hora_local>2026-07-14 14:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-14 19:00:00</fecha_hora_utc>
+      <estadio>AT&amp;T Stadium</estadio>
+      <ciudad>Arlington</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>70176</asistencia>
+      <arbitro>Iván Barton (El Salvador)</arbitro>
+    </partido>
+    <partido numero="102" fase="Semifinales">
+      <local codigo_fifa="ENG">England</local>
+      <visitante codigo_fifa="ARG">Argentina</visitante>
+      <fecha_hora_local>2026-07-15 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-15 19:00:00</fecha_hora_utc>
+      <estadio>Mercedes-Benz Stadium</estadio>
+      <ciudad>Atlanta</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>2</goles_visitante>
+      <asistencia>68239</asistencia>
+      <arbitro>Ismail Elfath (United States)</arbitro>
+    </partido>
+    <partido numero="103" fase="Tercer puesto">
+      <local codigo_fifa="FRA">France</local>
+      <visitante codigo_fifa="ENG">England</visitante>
+      <fecha_hora_local>2026-07-18 17:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-18 21:00:00</fecha_hora_utc>
+      <estadio>Hard Rock Stadium</estadio>
+      <ciudad>Miami Gardens</ciudad>
+      <goles_local>4</goles_local>
+      <goles_visitante>6</goles_visitante>
+      <asistencia>64478</asistencia>
+      <arbitro>Jesús Valenzuela (Venezuela)</arbitro>
+    </partido>
+    <partido numero="104" fase="Final">
+      <local codigo_fifa="ESP">Spain</local>
+      <visitante codigo_fifa="ARG">Argentina</visitante>
+      <fecha_hora_local>2026-07-19 15:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-07-19 19:00:00</fecha_hora_utc>
+      <estadio>MetLife Stadium</estadio>
+      <ciudad>East Rutherford</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>80663</asistencia>
+      <arbitro>Slavko Vinčić (Slovenia)</arbitro>
+    </partido>
+  </partidos>
+</mundial>

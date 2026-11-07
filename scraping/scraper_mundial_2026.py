@@ -192,14 +192,16 @@ def _primer_parametro_plantilla(valor):
             continue
         for parametro in m.group(2).split("|"):
             parametro = parametro.strip()
-            if parametro and "=" not in parametro:
+            if (parametro and "=" not in parametro
+                    and not re.fullmatch(r"fb[\w-]*|flag[\w-]*|[A-Z]{3}", parametro)):
                 return parametro
     return None
 
 
 def codigo_equipo(valor):
     """{{fb|MEX}} / {{fb-rt|RSA}} / {{fbw|...}} / cualquier plantilla con código de 3 letras -> 'MEX'."""
-    m = re.search(r"\{\{\s*[^{}|]+\|\s*([A-Z]{3})\s*[|}]", valor or "")
+    # Sirve para {{fb-rt|MEX}} y para {{#invoke:flag|fb-rt|MEX}} (formato actual de Wikipedia)
+    m = re.search(r"\{\{[^{}]*?\|\s*([A-Z]{3})\s*[|}]", valor or "")
     if m:
         return m.group(1)
     nombre = nombre_equipo(valor)
@@ -467,13 +469,12 @@ EJEMPLO = """
 
 
 EJEMPLO_INVOKE = """
-===South Korea vs Czechia===
-{{#invoke:football box|main
+<section begin="A2" />{{#invoke:football box|main
 |date={{Start date|2026|6|11}}
-|time=8:00{{nbsp}}p.m. [[Central Time Zone|CST]] ([[UTC−6]])
-|team1={{fb-rt|KOR}}
-|score=1–1
-|team2={{fb|CZE}}
+|time=8:00&nbsp;p.m. [[UTC−06:00|UTC−6]]
+|team1={{#invoke:flag|fb-rt|KOR}}
+|score={{score link|2026 FIFA World Cup Group A#South Korea vs Czech Republic|2–1}}
+|team2={{#invoke:flag|fb|CZE}}
 |stadium=[[Estadio Akron]], [[Zapopan]]
 |attendance=46,000
 |referee=Someone (Somewhere)
@@ -563,12 +564,15 @@ def main(argumentos):
                     vistos.add(clave)
                     encontrados.append(p)
             print("  {} caracteres, {} partidos nuevos".format(len(wikitext), len(encontrados)))
-            if fase != "Fase de Grupos":
+            if titulo == PAGINA_ELIMINATORIA:
+                # Solo desde la página de la eliminatoria y solo hacia páginas de esa fase
                 # Secciones de la eliminatoria que remiten a otra página ({{main|...}} o {{:Página}})
                 for m in re.finditer(r"\{\{\s*(?:main|see also|further|:)\s*\|?\s*([^{}|]*2026 FIFA World Cup[^{}|]*)", wikitext, re.I):
                     destino = m.group(1).split("#")[0].strip()
                     fase_destino = fase or fase_de_posicion(wikitext, m.start())
-                    if destino and destino.lower() not in visitadas and fase_destino:
+                    if (destino and destino.lower() not in visitadas and fase_destino
+                            and re.search(r"round of 32|knockout|final", destino, re.I)
+                            and not re.search(r"qualif|squad|bid|broadcast|seeding|draw|officials|disciplin", destino, re.I)):
                         pendientes.append((destino, fase_destino, None))
             if not encontrados and fase == "Fase de Grupos":
                 i = wikitext.lower().find("team1")
