@@ -27,6 +27,7 @@
 # USO:   python scraper_mundial_2026.py C:\Importar\mundial_2026_wikipedia.xml
 #        python scraper_mundial_2026.py --prueba salida.xml      (usa un wikitext de ejemplo, sin Internet)
 
+import os
 import re
 import sys
 import time
@@ -42,6 +43,8 @@ PAUSA_SEGUNDOS = 1.0
 
 PAGINAS_GRUPOS = {letra: "2026 FIFA World Cup Group " + letra for letra in "ABCDEFGHIJKL"}
 PAGINA_ELIMINATORIA = "2026 FIFA World Cup knockout stage"
+PAGINA_FINAL = "2026 FIFA World Cup final"
+CARPETA_CRUDO = "wikitext_crudo"   # copia del wikitext descargado, para revisar si algo no se reconoce
 
 # Títulos de sección de la fase eliminatoria -> nombre de la fase en la base
 FASES_ELIMINATORIA = [
@@ -156,15 +159,72 @@ def enlaces(texto):
     return salida
 
 
+# Nombre en inglés (como figura en Wikipedia) -> código FIFA. Se usa cuando la página no trae el código.
+CODIGOS_FIFA = {
+    "mexico": "MEX", "united states": "USA", "canada": "CAN", "argentina": "ARG", "brazil": "BRA",
+    "ecuador": "ECU", "uruguay": "URU", "colombia": "COL", "paraguay": "PAR", "bolivia": "BOL",
+    "japan": "JPN", "iran": "IRN", "ir iran": "IRN", "uzbekistan": "UZB", "south korea": "KOR",
+    "korea republic": "KOR", "jordan": "JOR", "australia": "AUS", "qatar": "QAT", "saudi arabia": "KSA",
+    "iraq": "IRQ", "new zealand": "NZL", "new caledonia": "NCL", "morocco": "MAR", "tunisia": "TUN",
+    "egypt": "EGY", "algeria": "ALG", "ghana": "GHA", "cape verde": "CPV", "cabo verde": "CPV",
+    "south africa": "RSA", "senegal": "SEN", "ivory coast": "CIV", "côte d'ivoire": "CIV",
+    "dr congo": "COD", "congo dr": "COD", "nigeria": "NGA", "cameroon": "CMR", "england": "ENG",
+    "france": "FRA", "croatia": "CRO", "portugal": "POR", "norway": "NOR", "germany": "GER",
+    "netherlands": "NED", "switzerland": "SUI", "spain": "ESP", "belgium": "BEL", "austria": "AUT",
+    "scotland": "SCO", "wales": "WAL", "czech republic": "CZE", "czechia": "CZE", "italy": "ITA",
+    "turkey": "TUR", "türkiye": "TUR", "denmark": "DEN", "ukraine": "UKR", "sweden": "SWE",
+    "poland": "POL", "bosnia and herzegovina": "BIH", "slovakia": "SVK", "kosovo": "KVX",
+    "republic of ireland": "IRL", "ireland": "IRL", "albania": "ALB", "north macedonia": "MKD",
+    "romania": "ROU", "serbia": "SRB", "hungary": "HUN", "greece": "GRE", "slovenia": "SVN",
+    "jamaica": "JAM", "suriname": "SUR", "curaçao": "CUW", "curacao": "CUW", "haiti": "HAI",
+    "panama": "PAN", "costa rica": "CRC", "honduras": "HON", "el salvador": "SLV", "guatemala": "GUA",
+    "venezuela": "VEN", "peru": "PER", "chile": "CHI", "united arab emirates": "UAE", "oman": "OMA",
+    "china": "CHN", "china pr": "CHN", "indonesia": "IDN", "bahrain": "BHR", "palestine": "PLE",
+    "mali": "MLI", "burkina faso": "BFA", "gabon": "GAB", "benin": "BEN", "uganda": "UGA",
+}
+
+
+def _primer_parametro_plantilla(valor):
+    """{{fb-rt|MEX}} -> 'MEX'; {{flagteam|Mexico|...}} -> 'Mexico' (primer parámetro sin '=')."""
+    for m in re.finditer(r"\{\{\s*([^{}|]+?)\s*\|([^{}]*)\}\}", valor or ""):
+        nombre_plantilla = m.group(1).strip().lower()
+        if nombre_plantilla in ("goal", "goals", "yel", "sent off", "sub", "efn", "abbr"):
+            continue
+        for parametro in m.group(2).split("|"):
+            parametro = parametro.strip()
+            if parametro and "=" not in parametro:
+                return parametro
+    return None
+
+
 def codigo_equipo(valor):
-    """{{fb|MEX}} / {{fb-rt|RSA}} / {{fbw|...}} -> 'MEX'. Si no hay plantilla, devuelve None."""
-    m = re.search(r"\{\{\s*fb[\w-]*\s*\|\s*([A-Z]{3})\b", valor or "")
-    return m.group(1) if m else None
+    """{{fb|MEX}} / {{fb-rt|RSA}} / {{fbw|...}} / cualquier plantilla con código de 3 letras -> 'MEX'."""
+    m = re.search(r"\{\{\s*[^{}|]+\|\s*([A-Z]{3})\s*[|}]", valor or "")
+    if m:
+        return m.group(1)
+    nombre = nombre_equipo(valor)
+    return CODIGOS_FIFA.get(nombre.lower()) if nombre else None
 
 
 def nombre_equipo(valor):
     texto = limpiar(valor)
-    return texto if texto else None
+    if texto:
+        return texto
+    parametro = _primer_parametro_plantilla(valor)
+    if parametro and not re.fullmatch(r"[A-Z]{3}", parametro):
+        return limpiar(parametro) or None
+    return None
+
+
+def equipos_de_titulo(texto, posicion):
+    """Título '===Mexico vs South Africa===' más cercano antes del partido -> ('Mexico', 'South Africa')."""
+    encabezados = list(re.finditer(r"^(={2,5})\s*(.+?)\s*\1\s*$", texto[:posicion], re.M))
+    if encabezados:
+        titulo = limpiar(encabezados[-1].group(2))
+        m = re.match(r"(.+?)\s+(?:vs?\.?|v\.)\s+(.+)$", titulo, re.I)
+        if m:
+            return m.group(1).strip(), m.group(2).strip()
+    return None, None
 
 
 def parsear_fecha(valor):
@@ -181,16 +241,25 @@ def parsear_fecha(valor):
 
 
 def parsear_hora(valor):
-    """'13:00 [[Central Time Zone|CST]] ([[UTC−6]])' -> (13, 0, -360)."""
-    texto = (valor or "").replace("\u2212", "-").replace("\u2013", "-")
-    m_hora = re.search(r"(\d{1,2}):(\d{2})", texto)
-    m_huso = re.search(r"UTC\s*([+-])\s*(\d{1,2})(?::(\d{2}))?", texto)
+    """'13:00 [[Central Time Zone|CST]] ([[UTC−6]])' -> (13, 0, -360); '1:00 p.m. CST (UTC−6)' -> (13, 0, -360)."""
+    texto = limpiar(valor).replace("\u2212", "-").replace("\u2013", "-").replace("\u00a0", " ")
+    if not texto:
+        texto = (valor or "").replace("\u2212", "-")
+    m_hora = re.search(r"(\d{1,2}):(\d{2})\s*(?:([ap])\.?\s*m\b\.?)?", texto, re.I)
+    patron_huso = r"UTC\s*([+-])\s*(\d{1,2})(?::(\d{2}))?"
+    m_huso = re.search(patron_huso, texto) or re.search(patron_huso, (valor or "").replace("\u2212", "-"))
     if not m_hora:
         return None
+    hora, minuto = int(m_hora.group(1)), int(m_hora.group(2))
+    meridiano = (m_hora.group(3) or "").lower()
+    if meridiano == "p" and hora < 12:
+        hora += 12
+    elif meridiano == "a" and hora == 12:
+        hora = 0
     offset = None
     if m_huso:
         offset = (int(m_huso.group(2)) * 60 + int(m_huso.group(3) or 0)) * (-1 if m_huso.group(1) == "-" else 1)
-    return int(m_hora.group(1)), int(m_hora.group(2)), offset
+    return hora, minuto, offset
 
 
 def parsear_resultado(valor):
@@ -277,13 +346,29 @@ def extraer_partidos(wikitext, fase_fija=None, grupo=None):
             offset = hora[2]
             if offset is not None:
                 fecha_utc = fecha_local - timedelta(minutes=offset)
+        equipo1 = p.get("team1") or p.get("home") or p.get("team_1")
+        equipo2 = p.get("team2") or p.get("away") or p.get("team_2")
+        local_fifa, local_nombre = codigo_equipo(equipo1), nombre_equipo(equipo1)
+        visitante_fifa, visitante_nombre = codigo_equipo(equipo2), nombre_equipo(equipo2)
+        if not (local_fifa or local_nombre) or not (visitante_fifa or visitante_nombre):
+            # Último recurso: el título de la sección del partido ("Mexico vs South Africa")
+            t1, t2 = equipos_de_titulo(wikitext, posicion)
+            if t1 and not (local_fifa or local_nombre):
+                local_nombre, local_fifa = t1, CODIGOS_FIFA.get(t1.lower())
+            if t2 and not (visitante_fifa or visitante_nombre):
+                visitante_nombre, visitante_fifa = t2, CODIGOS_FIFA.get(t2.lower())
+        if local_fifa and not local_nombre:
+            local_nombre = next((n.title() for n, c in CODIGOS_FIFA.items() if c == local_fifa), None)
+        if visitante_fifa and not visitante_nombre:
+            visitante_nombre = next((n.title() for n, c in CODIGOS_FIFA.items() if c == visitante_fifa), None)
         partidos.append({
             "fase": fase,
             "grupo": grupo,
-            "local_fifa": codigo_equipo(p.get("team1")),
-            "local_nombre": nombre_equipo(p.get("team1")),
-            "visitante_fifa": codigo_equipo(p.get("team2")),
-            "visitante_nombre": nombre_equipo(p.get("team2")),
+            "crudo_team1": equipo1,
+            "local_fifa": local_fifa,
+            "local_nombre": local_nombre,
+            "visitante_fifa": visitante_fifa,
+            "visitante_nombre": visitante_nombre,
             "fecha_hora_local": fecha_local.strftime("%Y-%m-%d %H:%M:%S") if fecha_local else limpiar(p.get("date")),
             "fecha_hora_utc": fecha_utc.strftime("%Y-%m-%d %H:%M:%S") if fecha_utc else None,
             "offset": offset,
@@ -385,7 +470,7 @@ EJEMPLO_INVOKE = """
 ===South Korea vs Czechia===
 {{#invoke:football box|main
 |date={{Start date|2026|6|11}}
-|time=20:00 [[Central Time Zone|CST]] ([[UTC−6]])
+|time=8:00{{nbsp}}p.m. [[Central Time Zone|CST]] ([[UTC−6]])
 |team1={{fb-rt|KOR}}
 |score=1–1
 |team2={{fb|CZE}}
@@ -397,6 +482,23 @@ EJEMPLO_INVOKE = """
 
 
 EJEMPLO_ELIMINATORIA = """
+==Round of 32==
+===Mexico vs Japan===
+{{Football box
+|date=June 28, 2026
+|time=1:00 p.m. [[Central Time Zone|CST]] ([[UTC−6]])
+|team1={{flagteam|Mexico}}
+|score=2–0
+|team2=[[Japan national football team|Japan]]
+|stadium=[[Estadio Azteca]], [[Mexico City]]
+}}
+===South Africa vs Spain===
+{{Football box
+|date=June 29, 2026
+|time=12:00 p.m. EDT (UTC−4)
+|score=0–3
+|stadium=[[MetLife Stadium]], [[East Rutherford, New Jersey|East Rutherford]]
+}}
 ==Round of 16==
 ===Match 89===
 ====Argentina vs Germany====
@@ -437,19 +539,46 @@ def main(argumentos):
                     + extraer_partidos(EJEMPLO_ELIMINATORIA))
         capacidades = {"Estadio Azteca": 83264, "Lincoln Financial Field": 67594}
     else:
-        paginas = [(titulo, "Fase de Grupos", letra) for letra, titulo in PAGINAS_GRUPOS.items()]
-        paginas.append((PAGINA_ELIMINATORIA, None, None))
-        for titulo, fase, letra in paginas:
+        os.makedirs(CARPETA_CRUDO, exist_ok=True)
+        pendientes = [(titulo, "Fase de Grupos", letra) for letra, titulo in PAGINAS_GRUPOS.items()]
+        pendientes += [(PAGINA_ELIMINATORIA, None, None), (PAGINA_FINAL, "Final", None)]
+        visitadas, vistos = set(), set()
+        while pendientes:
+            titulo, fase, letra = pendientes.pop(0)
+            if titulo.lower() in visitadas:
+                continue
+            visitadas.add(titulo.lower())
             print("Descargando", titulo)
-            wikitext = descargar_wikitext(titulo)
-            encontrados = extraer_partidos(wikitext, fase, letra)
-            print("  {} caracteres, {} partidos".format(len(wikitext), len(encontrados)))
-            if not encontrados:
-                # Diagnóstico: muestra cómo empieza el primer bloque que parece un partido
+            try:
+                wikitext = descargar_wikitext(titulo)
+            except Exception as error:
+                print("  No se pudo descargar:", error)
+                continue
+            with open(os.path.join(CARPETA_CRUDO, re.sub(r"[^\w]+", "_", titulo) + ".txt"), "w", encoding="utf-8") as archivo:
+                archivo.write(wikitext)
+            encontrados = []
+            for p in extraer_partidos(wikitext, fase, letra):
+                clave = (p["fecha_hora_local"], p["estadio"])
+                if clave not in vistos:      # el mismo partido puede aparecer en dos páginas
+                    vistos.add(clave)
+                    encontrados.append(p)
+            print("  {} caracteres, {} partidos nuevos".format(len(wikitext), len(encontrados)))
+            if fase != "Fase de Grupos":
+                # Secciones de la eliminatoria que remiten a otra página ({{main|...}} o {{:Página}})
+                for m in re.finditer(r"\{\{\s*(?:main|see also|further|:)\s*\|?\s*([^{}|]*2026 FIFA World Cup[^{}|]*)", wikitext, re.I):
+                    destino = m.group(1).split("#")[0].strip()
+                    fase_destino = fase or fase_de_posicion(wikitext, m.start())
+                    if destino and destino.lower() not in visitadas and fase_destino:
+                        pendientes.append((destino, fase_destino, None))
+            if not encontrados and fase == "Fase de Grupos":
                 i = wikitext.lower().find("team1")
                 print("  DIAGNÓSTICO (no se reconoció ningún partido):")
                 print("  " + (wikitext[max(0, i - 400):i + 200] if i >= 0 else wikitext[:600]).replace("\n", "\n  "))
             partidos += encontrados
+        sin_equipos = [p for p in partidos if not (p["local_fifa"] or p["local_nombre"])]
+        if sin_equipos:
+            print("AVISO: {} partidos sin selecciones. Ejemplo de team1 crudo: {!r}".format(
+                len(sin_equipos), sin_equipos[0]["crudo_team1"]))
         for articulo in sorted({p["estadio_articulo"] for p in partidos if p["estadio_articulo"]}):
             try:
                 print("Descargando", articulo)
@@ -457,6 +586,10 @@ def main(argumentos):
             except Exception as error:  # se sigue con los demás estadios
                 print("  No se pudo obtener la capacidad:", error)
 
+    orden_fases = ["Fase de Grupos", "Dieciseisavos de final", "Octavos de final", "Cuartos de final",
+                   "Semifinales", "Tercer puesto", "Final"]
+    partidos.sort(key=lambda p: (orden_fases.index(p["fase"]) if p["fase"] in orden_fases else 99,
+                                 p["grupo"] or "", p["fecha_hora_local"] or ""))
     for p in partidos:
         if p["grupo"]:
             for lado in ("local", "visitante"):
