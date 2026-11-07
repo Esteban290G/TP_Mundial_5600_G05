@@ -780,12 +780,14 @@ CREATE OR ALTER PROCEDURE Participantes.Alta_Pais
     @nombre VARCHAR(50),
     @codigo_iso CHAR(3),
     @pbi_per_capita DECIMAL(18,2),
-    @huso_horario VARCHAR(10) = NULL -- Opcional (ej: 'UTC-3'). Se usa para calcular el prime time del mercado.
+    @huso_horario VARCHAR(10) = NULL, -- Opcional (ej: 'UTC-3'). Se usa para calcular el prime time del mercado.
+    @nombre_ingles VARCHAR(60) = NULL, -- Opcional: para vincular datasets externos en inglés
+    @codigo_fifa CHAR(3) = NULL -- Opcional: código FIFA (ej: ENG para Inglaterra)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @MensajeError VARCHAR(300) = '';
+    DECLARE @MensajeError VARCHAR(500) = '';
 
     -- Nombre vacío
     IF (@nombre IS NULL OR LTRIM(RTRIM(@nombre)) = '')
@@ -803,6 +805,12 @@ BEGIN
     IF (@huso_horario IS NOT NULL AND Torneo.fn_Offset_Huso_Minutos(@huso_horario) IS NULL)
         SET @MensajeError = @MensajeError + '- El huso horario debe tener el formato UTC±H o UTC±H:MM (ej: UTC-3). ';
 
+    -- Código FIFA de 3 caracteres y no repetido
+    IF (@codigo_fifa IS NOT NULL AND LEN(LTRIM(RTRIM(@codigo_fifa))) <> 3)
+        SET @MensajeError = @MensajeError + '- El código FIFA debe tener exactamente 3 caracteres. ';
+    ELSE IF EXISTS (SELECT 1 FROM Participantes.Pais WHERE codigo_fifa = UPPER(LTRIM(RTRIM(@codigo_fifa))))
+        SET @MensajeError = @MensajeError + '- Ya existe un país con ese código FIFA. ';
+
     IF (@MensajeError <> '')
     BEGIN
         ;THROW 50001, @MensajeError, 1;
@@ -812,13 +820,15 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        INSERT INTO Participantes.Pais (codigo_moneda, nombre, codigo_iso, pbi_per_capita, huso_horario)
+        INSERT INTO Participantes.Pais (codigo_moneda, nombre, codigo_iso, pbi_per_capita, huso_horario, nombre_ingles, codigo_fifa)
         VALUES (
             UPPER(LTRIM(RTRIM(@codigo_moneda))), 
             LTRIM(RTRIM(@nombre)), 
             UPPER(LTRIM(RTRIM(@codigo_iso))), 
             @pbi_per_capita,
-            UPPER(REPLACE(LTRIM(RTRIM(@huso_horario)), ' ', ''))
+            UPPER(REPLACE(LTRIM(RTRIM(@huso_horario)), ' ', '')),
+            NULLIF(LTRIM(RTRIM(@nombre_ingles)), ''),
+            UPPER(NULLIF(LTRIM(RTRIM(@codigo_fifa)), ''))
         );
 
         COMMIT TRANSACTION;

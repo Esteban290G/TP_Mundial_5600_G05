@@ -874,8 +874,8 @@ GO
 --                - Clave del partido: fase + selección local + selección visitante.
 --                - Si el partido no existe se inserta; si existe se actualizan sede, horarios, resultado
 --                  y asistencia (un resultado o asistencia vacíos en el archivo no borran lo ya cargado).
---              La fase, la sede y las selecciones se buscan por nombre (la selección también por nombre
---              o código ISO del país). Si no viene la hora UTC se calcula con el huso horario de la sede.
+--              La fase, la sede y las selecciones se buscan por nombre (la selección también por nombre del
+--              país en castellano o inglés, código ISO o código FIFA). Si no viene la hora UTC se calcula con el huso horario de la sede.
 --              Importación parcial: las filas válidas se importan y las inválidas quedan marcadas con
 --              estado 'Error' y el detalle de todos sus problemas. Si el mismo partido aparece repetido
 --              en el archivo se importa la última aparición y las anteriores quedan como 'Duplicado'.
@@ -994,12 +994,12 @@ BEGIN
     SET id_local = (SELECT TOP 1 SE.id_seleccion
                     FROM Participantes.Seleccion SE
                     INNER JOIN Participantes.Pais PA ON SE.id_pais = PA.id_pais
-                    WHERE F.local_txt IN (SE.nombre_seleccion, PA.nombre, PA.codigo_iso)
+                    WHERE F.local_txt IN (SE.nombre_seleccion, PA.nombre, PA.codigo_iso, PA.codigo_fifa, PA.nombre_ingles)
                     ORDER BY CASE WHEN SE.nombre_seleccion = F.local_txt THEN 0 ELSE 1 END, SE.id_seleccion),
         id_visitante = (SELECT TOP 1 SE.id_seleccion
                         FROM Participantes.Seleccion SE
                         INNER JOIN Participantes.Pais PA ON SE.id_pais = PA.id_pais
-                        WHERE F.visitante_txt IN (SE.nombre_seleccion, PA.nombre, PA.codigo_iso)
+                        WHERE F.visitante_txt IN (SE.nombre_seleccion, PA.nombre, PA.codigo_iso, PA.codigo_fifa, PA.nombre_ingles)
                         ORDER BY CASE WHEN SE.nombre_seleccion = F.visitante_txt THEN 0 ELSE 1 END, SE.id_seleccion)
     FROM #filas F;
 
