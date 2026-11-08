@@ -40,6 +40,7 @@ DROP TABLE IF EXISTS Participantes.Arbitro;
 DROP TABLE IF EXISTS Participantes.Club_origen;
 DROP TABLE IF EXISTS Participantes.Ciudad;
 DROP TABLE IF EXISTS Participantes.Feriado_pais;
+DROP TABLE IF EXISTS Participantes.Historial_pbi_pais;
 DROP TABLE IF EXISTS Torneo.Parametros_suspension;
 DROP TABLE IF EXISTS Participantes.Pais;
 DROP TABLE IF EXISTS Participantes.Cotizacion_moneda;
@@ -252,6 +253,23 @@ CREATE TABLE Torneo.Parametros_suspension (
     CONSTRAINT CK_Parametros_Roja CHECK (fechas_suspension_roja_directa > 0),
     CONSTRAINT CK_Parametros_Doble_Amarilla CHECK (fechas_suspension_doble_amarilla > 0),
     CONSTRAINT CK_Parametros_Cantidad_Amarillas CHECK (cantidad_amarillas_suspension > 0)
+);
+GO
+
+-- Historial del PBI per cápita por país y año (lo carga la API del Banco Mundial). Pais.pbi_per_capita guarda
+-- el último año disponible; acá se conservan todos los años importados, y una reimportación no borra los anteriores.
+CREATE TABLE Participantes.Historial_pbi_pais (
+	id_historial_pbi INT IDENTITY(1,1),
+	id_pais INT NOT NULL,
+	anio SMALLINT NOT NULL,
+	pbi_per_capita DECIMAL(18,2) NOT NULL,
+	fecha_actualizacion DATETIME NOT NULL CONSTRAINT DF_Historial_pbi_fecha DEFAULT GETDATE(),
+
+	CONSTRAINT PK_Historial_pbi_pais PRIMARY KEY (id_historial_pbi),
+	CONSTRAINT FK_Historial_pbi_Pais FOREIGN KEY (id_pais) REFERENCES Participantes.Pais(id_pais),
+	CONSTRAINT UQ_Historial_pbi_Pais_Anio UNIQUE (id_pais, anio),
+	CONSTRAINT CK_Historial_pbi_Valor CHECK (pbi_per_capita >= 0),
+	CONSTRAINT CK_Historial_pbi_Anio CHECK (anio BETWEEN 1960 AND 2100)
 );
 GO
 
