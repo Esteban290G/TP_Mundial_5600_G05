@@ -17,9 +17,14 @@
 --- Límites: sin clave; Wikipedia pide un User-Agent identificable y no saturar el sitio (el script pausa 1 s por pedido).
 --
 -- APIs:
---- REST Countries (https://restcountries.com/v3.1/all?fields=...)
------ Países: nombre en castellano e inglés, código ISO, código FIFA, moneda y coordenadas de la capital.
------ Sin clave. El endpoint /all exige indicar los campos (máximo 10). Sin límite de uso publicado.
+--- Países: dataset JSON mledoze/countries publicado en GitHub, consultado por HTTP
+---   (https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json)
+----- Es la fuente de datos sobre la que estaba construida la API REST Countries. REST Countries v1-v4 se dio de
+----- baja en 2026 (devuelve {"success": false, ... "This API version has been deprecated"}) y la v5 exige
+----- registrarse y una clave, por eso se consume directamente el JSON de origen.
+----- Datos: nombre en castellano e inglés, código ISO alfa-3, código COI (se usa como código FIFA, con una tabla de
+----- excepciones donde difieren), moneda y coordenadas de referencia del país.
+----- Sin clave ni límite de uso publicado (archivo de unos 800 KB).
 --- Banco Mundial (https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.CD)
 ----- PBI per cápita en USD corrientes (proxy de poder adquisitivo para la publicidad).
 ----- Sin clave. Máximo 32.500 registros por página; se pide el último valor disponible (mrnev=1).
@@ -34,7 +39,8 @@ GO
 
 ------------------------------------------
 -- Procedimiento: Participantes.Importar_API_Paises
--- Descripción: Consulta la API REST Countries y hace un upsert de los países (clave: código ISO alfa-3).
+-- Descripción: Descarga por HTTP el JSON de países de mledoze/countries (la fuente de REST Countries, cuya API
+--              v3.1 fue dada de baja) y hace un upsert de los países (clave: código ISO alfa-3).
 --                - País existente: completa nombre en inglés, código FIFA y coordenadas de la capital
 --                  (no cambia el nombre en castellano ni la moneda ya cargados).
 --                - País nuevo: se inserta con el nombre en castellano y su moneda (si la moneda no existe, se crea).
@@ -47,8 +53,9 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @url VARCHAR(2000) = 'https://restcountries.com/v3.1/all?fields=name,cca3,fifa,translations,currencies,capitalInfo';
-    DECLARE @fuente VARCHAR(255) = 'API REST Countries - países';
+    DECLARE @url VARCHAR(2000) = 'https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json';
+    DECLARE @fuente VARCHAR(255) = 'JSON países (mledoze/countries)';
+    DECLARE @MensajeError NVARCHAR(1000);
     DECLARE @json NVARCHAR(MAX);
     DECLARE @id_log INT;
     DECLARE @total INT = 0, @insertados INT = 0, @actualizados INT = 0, @con_error INT = 0;
@@ -56,9 +63,14 @@ BEGIN
     -- Consulta a la API (si falla, Consultar_API lanza el error)
     EXEC Torneo.Consultar_API @url = @url, @respuesta = @json OUTPUT;
 
-    IF (ISJSON(@json) = 0 OR LEFT(LTRIM(@json), 1) <> '[')
+    IF (ISJSON(@json) = 0 OR LEFT(LTRIM(@json), 1) <> '[' OR JSON_VALUE(@json, '$[0].cca3') IS NULL)
     BEGIN
-        ;THROW 50001, '- La respuesta de REST Countries no es una lista JSON válida. ', 1;
+        -- Si la fuente devuelve un mensaje de error en JSON (p. ej. {"success": false, "errors": [...]}) se muestra
+        SET @MensajeError = '- La respuesta no es la lista de países esperada'
+            + ISNULL(': ' + LEFT(COALESCE(JSON_VALUE(@json, '$.errors[0].message'), JSON_VALUE(@json, '$[0].errors[0].message'),
+                                           JSON_VALUE(@json, '$.message'), LEFT(@json, 150)), 300), '')
+            + '. ';
+        ;THROW 50001, @MensajeError, 1;
         RETURN;
     END
 
@@ -82,19 +94,26 @@ BEGIN
         UPPER(LTRIM(RTRIM(P.cca3))),
         LTRIM(RTRIM(ISNULL(P.nombre_es, P.nombre_en))),
         LTRIM(RTRIM(P.nombre_en)),
-        UPPER(NULLIF(LTRIM(RTRIM(P.fifa)), '')),
+        -- Código FIFA: el del COI salvo en los países donde la FIFA usa otro (o donde el COI no tiene código)
+        UPPER(NULLIF(LTRIM(RTRIM(COALESCE(EX.codigo_fifa, P.cioc))), '')),
         M.codigo,
         M.nombre,
-        TRY_CAST(JSON_VALUE(P.capital, '$.latlng[0]') AS DECIMAL(9,6)),
-        TRY_CAST(JSON_VALUE(P.capital, '$.latlng[1]') AS DECIMAL(9,6))
+        TRY_CAST(JSON_VALUE(P.coordenadas, '$[0]') AS DECIMAL(9,6)),
+        TRY_CAST(JSON_VALUE(P.coordenadas, '$[1]') AS DECIMAL(9,6))
     FROM OPENJSON(@json) WITH (
         cca3 NVARCHAR(10) '$.cca3',
-        fifa NVARCHAR(10) '$.fifa',
+        cioc NVARCHAR(10) '$.cioc',
         nombre_en NVARCHAR(200) '$.name.common',
         nombre_es NVARCHAR(200) '$.translations.spa.common',
         monedas NVARCHAR(MAX) '$.currencies' AS JSON,
-        capital NVARCHAR(MAX) '$.capitalInfo' AS JSON
+        coordenadas NVARCHAR(MAX) '$.latlng' AS JSON
     ) AS P
+    LEFT JOIN (VALUES
+        ('IRN','IRN'), ('IDN','IDN'), ('SVN','SVN'), ('SLV','SLV'), ('UNK','KVX'), ('LBY','LBY'), ('GNB','GNB'),
+        ('ATG','ATG'), ('BRB','BRB'), ('VGB','VGB'), ('VIR','VIR'), ('GNQ','EQG'), ('MWI','MWI'), ('BHR','BHR'),
+        ('CUW','CUW'), ('NCL','NCL'), ('SSD','SSD'), ('PYF','TAH'), ('MAC','MAC'), ('FRO','FRO'), ('GIB','GIB'),
+        ('TCA','TCA'), ('AIA','AIA'), ('MSR','MSR')
+    ) AS EX (codigo_iso, codigo_fifa) ON EX.codigo_iso = P.cca3
     OUTER APPLY (
         -- Si el país tiene varias monedas se toma la primera en orden alfabético
         SELECT TOP 1 [key] AS codigo, JSON_VALUE([value], '$.name') AS nombre
@@ -116,7 +135,7 @@ BEGIN
         CASE WHEN nombre_es IS NULL OR nombre_es = '' THEN '- Falta el nombre del país. '
              WHEN LEN(nombre_es) > 50 AND id_pais_existente IS NULL THEN '- El nombre "' + nombre_es + '" supera los 50 caracteres. ' END,
         CASE WHEN LEN(nombre_en) > 60 THEN '- El nombre en inglés supera los 60 caracteres. ' END,
-        CASE WHEN id_pais_existente IS NULL AND codigo_moneda IS NULL THEN '- El país no tiene moneda en la API. '
+        CASE WHEN id_pais_existente IS NULL AND codigo_moneda IS NULL THEN '- El país no tiene moneda en la fuente. '
              WHEN id_pais_existente IS NULL AND LEN(codigo_moneda) <> 3 THEN '- Código de moneda inválido. ' END
     ), '');
 
@@ -139,7 +158,7 @@ BEGIN
         WHERE estado IS NULL
     )
     UPDATE repetidos
-    SET estado = 'Error', mensaje_error = '- País repetido en la respuesta de la API. '
+    SET estado = 'Error', mensaje_error = '- País repetido en la fuente. '
     WHERE rn > 1;
 
     UPDATE #paises
@@ -203,7 +222,7 @@ BEGIN
         ;THROW;
     END CATCH;
 
-    PRINT CONCAT('REST Countries: ', @total, ' países recibidos, ', @insertados, ' insertados, ',
+    PRINT CONCAT('Países (mledoze/countries): ', @total, ' países recibidos, ', @insertados, ' insertados, ',
                  @actualizados, ' actualizados y ', @con_error, ' con error.');
 
     SELECT nro, estado, codigo_iso, nombre_es AS nombre, nombre_en AS nombre_ingles, codigo_fifa, codigo_moneda,
@@ -327,7 +346,7 @@ GO
 ------------------------------------------
 -- Procedimiento: Torneo.Actualizar_Husos_Horarios
 -- Descripción: Completa el huso horario de las sedes (con sus coordenadas, de Nominatim) y de los países
---              (con las coordenadas de su capital, de REST Countries) consultando la API timeapi.io.
+--              (con las coordenadas de referencia del país, de mledoze/countries) consultando la API timeapi.io.
 --              Como el torneo se juega en junio y julio, a los lugares del hemisferio norte que usan horario de
 --              verano se les suma 1 hora al huso estándar (en el hemisferio sur es invierno y no se aplica).
 --              Recorre los pendientes con un WHILE sobre una tabla numerada (sin cursores), 1 consulta por segundo.

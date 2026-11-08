@@ -24,7 +24,7 @@ GO
 -- Resultado esperado: importación parcial. Se insertan las sedes de los países que ya existen en la base y cuyo
 --                     nombre coincide (Argentina y Uruguay, con sus ciudades); el resto queda en 'Error' con el
 --                     mensaje 'El país "..." no existe en la base'. Después de importar los países con la API
---                     REST Countries (script 14) se reimporta y esas filas pasan a insertarse.
+--                     de países con Participantes.Importar_API_Paises (script 14) se reimporta y esas filas pasan a insertarse.
 --                     El log queda 'Completado con errores'.
 DECLARE @sedes_antes INT = (SELECT COUNT(*) FROM Torneo.Sede);
 

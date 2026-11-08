@@ -4,7 +4,7 @@
 -- Integrantes:
 -- Gonzalez Esteban Gabriel 42888511
 -- Vázquez Nahuel Domiciano 35756270
--- Descripción: Scripts de prueba para la importación por APIs (REST Countries, Banco Mundial, timeapi.io)
+-- Descripción: Scripts de prueba para la importación por APIs (países de mledoze/countries, Banco Mundial, timeapi.io)
 --              y del XML obtenido por scraping de Wikipedia.
 -- Requisitos:
 --   - Ejecutar antes los scripts 00 a 13 y los tests 07 a 12.
@@ -20,13 +20,14 @@ USE COM5600_G05;
 GO
 
 ------------------------------------------
--- PRUEBAS: Participantes.Importar_API_Paises (API REST Countries)
+-- PRUEBAS: Participantes.Importar_API_Paises (JSON de países mledoze/countries por HTTP)
 
 -- Test 01: Primera importación de países.
 -- Resultado esperado: alrededor de 250 países recibidos. Los que ya existían (Argentina, Brasil, Uruguay, España, etc.)
---                     quedan 'Actualizado' (se completan nombre en inglés, código FIFA y coordenadas de la capital,
+--                     quedan 'Actualizado' (se completan nombre en inglés, código FIFA y coordenadas de referencia,
 --                     sin cambiar su nombre en castellano); el resto queda 'Insertado' con su moneda. Algunos
---                     territorios sin moneda (por ejemplo la Antártida) quedan en 'Error' con 'El país no tiene moneda en la API'.
+--                     territorios sin moneda (por ejemplo la Antártida) quedan en 'Error' con 'El país no tiene moneda en la fuente'.
+--                     Alemania queda con código FIFA GER, Sudáfrica con RSA e Irán con IRN.
 DECLARE @paises_antes INT = (SELECT COUNT(*) FROM Participantes.Pais);
 
 EXEC Participantes.Importar_API_Paises;
@@ -62,7 +63,7 @@ GO
 
 ------------------------------------------
 -- PREPARACIÓN: selecciones del Reino Unido
--- Inglaterra y Escocia juegan el Mundial pero no son países para REST Countries ni para ISO 3166:
+-- Inglaterra y Escocia juegan el Mundial pero no son países para el dataset de países ni para ISO 3166:
 -- se cargan a mano con el SP de alta (el código ISO es interno y coincide con el código FIFA).
 
 IF NOT EXISTS (SELECT 1 FROM Participantes.Moneda WHERE codigo_moneda = 'GBP')

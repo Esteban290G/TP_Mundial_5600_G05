@@ -41,7 +41,7 @@ GO
 ------------------------------------------
 -- Procedimiento: Torneo.Consultar_API
 -- Descripción: Hace un GET HTTP a la URL indicada y devuelve el cuerpo de la respuesta.
---              Lo usan todos los procesos que consumen APIs (Nominatim, REST Countries, Banco Mundial, timeapi.io).
+--              Lo usan todos los procesos que consumen APIs (Nominatim, países mledoze/countries, Banco Mundial, timeapi.io).
 --              La respuesta se lee con INSERT ... EXEC para admitir respuestas de más de 4000 caracteres.
 -- Validaciones: URL vacía, error al crear el objeto HTTP (OLE Automation deshabilitado), error de conexión
 --               y estado HTTP distinto de 200. Los errores se informan con THROW.

@@ -227,8 +227,8 @@ CREATE TABLE Participantes.Pais (
 	codigo_iso CHAR(3) NOT NULL,
 	pbi_per_capita DECIMAL(18,2) NULL,
 	huso_horario VARCHAR(10) NULL, -- Formato 'UTC-3', 'UTC+5:30'. Se usa para calcular el prime time de cada mercado.
-	nombre_ingles VARCHAR(60) NULL, -- Nombre en inglés: permite vincular datasets externos (CSV, scraping). Lo completa la API REST Countries.
-	codigo_fifa CHAR(3) NULL, -- Código FIFA (ej: RSA para Sudáfrica, distinto del ISO ZAF). Lo completa la API REST Countries.
+	nombre_ingles VARCHAR(60) NULL, -- Nombre en inglés: permite vincular datasets externos (CSV, scraping). Lo completa la importación de países (mledoze/countries).
+	codigo_fifa CHAR(3) NULL, -- Código FIFA (ej: RSA para Sudáfrica, distinto del ISO ZAF). Lo completa la importación de países (mledoze/countries).
 	latitud_capital DECIMAL(9, 6) NULL, -- Coordenadas de la capital: se usan para obtener el huso horario de referencia del mercado.
 	longitud_capital DECIMAL(9, 6) NULL,
 
