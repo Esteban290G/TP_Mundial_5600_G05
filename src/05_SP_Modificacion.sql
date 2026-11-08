@@ -962,7 +962,7 @@ GO
 -- Procedimiento: Participantes.Modificacion_Pais
 -- Descripción: Modifica los datos de un país (los parámetros en NULL no se modifican).
 -- Validaciones: El registro debe existir, al menos un dato, nombre vacío, ISO distinto de 3 letras
---               o duplicado, PBI negativo, moneda inexistente y formato de huso horario.
+--               o duplicado, PBI negativo, moneda inexistente, formato de huso horario y código FIFA inválido o repetido.
 
 CREATE OR ALTER PROCEDURE Participantes.Modificacion_Pais
     @id_pais INT,
@@ -970,19 +970,22 @@ CREATE OR ALTER PROCEDURE Participantes.Modificacion_Pais
     @nombre VARCHAR(50) = NULL,
     @codigo_iso CHAR(3) = NULL,
     @pbi_per_capita DECIMAL(18,2) = NULL,
-    @huso_horario VARCHAR(10) = NULL
+    @huso_horario VARCHAR(10) = NULL,
+    @nombre_ingles VARCHAR(60) = NULL,
+    @codigo_fifa CHAR(3) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @MensajeError VARCHAR(600) = '';
+    DECLARE @MensajeError VARCHAR(800) = '';
 
     -- El registro debe existir
     IF NOT EXISTS (SELECT 1 FROM Participantes.Pais WHERE id_pais = @id_pais)
         SET @MensajeError = @MensajeError + '- El país que intenta modificar no existe. ';
 
     -- Al menos un dato a modificar
-    IF (@codigo_moneda IS NULL AND @nombre IS NULL AND @codigo_iso IS NULL AND @pbi_per_capita IS NULL AND @huso_horario IS NULL)
+    IF (@codigo_moneda IS NULL AND @nombre IS NULL AND @codigo_iso IS NULL AND @pbi_per_capita IS NULL AND @huso_horario IS NULL
+        AND @nombre_ingles IS NULL AND @codigo_fifa IS NULL)
         SET @MensajeError = @MensajeError + '- No se indicó ningún dato para modificar. ';
 
     -- Nombre vacío
@@ -1007,6 +1010,12 @@ BEGIN
     IF (@huso_horario IS NOT NULL AND Torneo.fn_Offset_Huso_Minutos(@huso_horario) IS NULL)
         SET @MensajeError = @MensajeError + '- El huso horario debe tener el formato UTC±H o UTC±H:MM (ej: UTC-3). ';
 
+    -- Código FIFA de 3 caracteres y no repetido
+    IF (@codigo_fifa IS NOT NULL AND LEN(LTRIM(RTRIM(@codigo_fifa))) <> 3)
+        SET @MensajeError = @MensajeError + '- El código FIFA debe tener exactamente 3 caracteres. ';
+    ELSE IF EXISTS (SELECT 1 FROM Participantes.Pais WHERE codigo_fifa = UPPER(LTRIM(RTRIM(@codigo_fifa))) AND id_pais <> @id_pais)
+        SET @MensajeError = @MensajeError + '- Ya existe otro país con ese código FIFA. ';
+
     IF (@MensajeError <> '')
     BEGIN
         ;THROW 50001, @MensajeError, 1;
@@ -1021,7 +1030,9 @@ BEGIN
             nombre = ISNULL(LTRIM(RTRIM(@nombre)), nombre),
             codigo_iso = ISNULL(UPPER(LTRIM(RTRIM(@codigo_iso))), codigo_iso),
             pbi_per_capita = ISNULL(@pbi_per_capita, pbi_per_capita),
-            huso_horario = ISNULL(UPPER(REPLACE(LTRIM(RTRIM(@huso_horario)), ' ', '')), huso_horario)
+            huso_horario = ISNULL(UPPER(REPLACE(LTRIM(RTRIM(@huso_horario)), ' ', '')), huso_horario),
+            nombre_ingles = CASE WHEN @nombre_ingles IS NULL THEN nombre_ingles ELSE NULLIF(LTRIM(RTRIM(@nombre_ingles)), '') END,
+            codigo_fifa = ISNULL(UPPER(LTRIM(RTRIM(@codigo_fifa))), codigo_fifa)
         WHERE id_pais = @id_pais;
 
         COMMIT TRANSACTION;

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Archivo de prueba armado por el grupo con la misma estructura que genera el scraper, con errores a propósito. -->
+<mundial fuente="prueba" fecha_extraccion="2026-11-06T15:00:00">
+  <sedes>
+    <sede estadio="Estadio Azteca" ciudad="Mexico City" pais_iso="MEX" capacidad="83264" huso_horario="UTC-6" />
+    <sede estadio="Estadio con un nombre demasiado largo para la base" ciudad="Monterrey" pais_iso="MEX" capacidad="50000" huso_horario="UTC-6" />
+    <sede estadio="Estadio Fantasma" ciudad="Ciudad Perdida" pais_iso="XXX" capacidad="10000" huso_horario="UTC-3" />
+    <sede estadio="Estadio Sin Capacidad" ciudad="Puebla" pais_iso="MEX" capacidad="mucha" huso_horario="UTC-6" />
+    <sede estadio="Estadio Huso Raro" ciudad="Tijuana" pais_iso="MEX" capacidad="27000" huso_horario="GMT+99" />
+  </sedes>
+  <grupos>
+    <grupo letra="A">
+      <seleccion codigo_fifa="MEX" nombre="Mexico" />
+      <seleccion codigo_fifa="RSA" nombre="South Africa" />
+      <seleccion codigo_fifa="ZZZ" nombre="Atlantis" />
+    </grupo>
+  </grupos>
+  <partidos>
+    <partido numero="1" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="MEX">Mexico</local>
+      <visitante codigo_fifa="RSA">South Africa</visitante>
+      <fecha_hora_local>2026-06-11 13:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-11 19:00:00</fecha_hora_utc>
+      <estadio>Estadio Azteca</estadio>
+      <ciudad>Mexico City</ciudad>
+      <goles_local>2</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia>83264</asistencia>
+      <arbitro>Facundo Tello (Argentina)</arbitro>
+    </partido>
+    <partido numero="2" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="MEX">Mexico</local>
+      <visitante codigo_fifa="ZZZ">Atlantis</visitante>
+      <fecha_hora_local>2026-06-18 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-19 01:00:00</fecha_hora_utc>
+      <estadio>Estadio Azteca</estadio>
+      <ciudad>Mexico City</ciudad>
+      <goles_local>1</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>80000</asistencia>
+      <arbitro />
+    </partido>
+    <partido numero="3" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="RSA">South Africa</local>
+      <visitante codigo_fifa="MEX">Mexico</visitante>
+      <fecha_hora_local>2026-06-24 19:00:00</fecha_hora_local>
+      <fecha_hora_utc>2026-06-25 01:00:00</fecha_hora_utc>
+      <estadio>Estadio Fantasma</estadio>
+      <ciudad>Ciudad Perdida</ciudad>
+      <goles_local>0</goles_local>
+      <goles_visitante>0</goles_visitante>
+      <asistencia>10000</asistencia>
+      <arbitro />
+    </partido>
+    <partido numero="4" fase="Fase de Grupos" grupo="A">
+      <local codigo_fifa="RSA">South Africa</local>
+      <visitante codigo_fifa="MEX">Mexico</visitante>
+      <fecha_hora_local>once de junio</fecha_hora_local>
+      <fecha_hora_utc />
+      <estadio>Estadio Azteca</estadio>
+      <ciudad>Mexico City</ciudad>
+      <goles_local>x</goles_local>
+      <goles_visitante>1</goles_visitante>
+      <asistencia />
+      <arbitro />
+    </partido>
+  </partidos>
+</mundial>

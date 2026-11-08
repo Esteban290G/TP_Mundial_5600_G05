@@ -227,6 +227,10 @@ CREATE TABLE Participantes.Pais (
 	codigo_iso CHAR(3) NOT NULL,
 	pbi_per_capita DECIMAL(18,2) NULL,
 	huso_horario VARCHAR(10) NULL, -- Formato 'UTC-3', 'UTC+5:30'. Se usa para calcular el prime time de cada mercado.
+	nombre_ingles VARCHAR(60) NULL, -- Nombre en inglés: permite vincular datasets externos (CSV, scraping). Lo completa la importación de países (mledoze/countries).
+	codigo_fifa CHAR(3) NULL, -- Código FIFA (ej: RSA para Sudáfrica, distinto del ISO ZAF). Lo completa la importación de países (mledoze/countries).
+	latitud_capital DECIMAL(9, 6) NULL, -- Coordenadas de la capital: se usan para obtener el huso horario de referencia del mercado.
+	longitud_capital DECIMAL(9, 6) NULL,
 
 	CONSTRAINT PK_Pais PRIMARY KEY (id_pais),
     CONSTRAINT FK_Pais_Moneda FOREIGN KEY (codigo_moneda) REFERENCES Participantes.Moneda(codigo_moneda),
@@ -305,7 +309,7 @@ CREATE TABLE Participantes.Seleccion (
 	id_seleccion INT IDENTITY(1,1),
 	nombre_seleccion VARCHAR(50) NOT NULL,
 	id_pais INT NOT NULL,
-	id_confederacion INT NOT NULL,
+	id_confederacion INT NULL, -- NULL si la selección llegó por importación y la confederación aún no se cargó
 	id_grupo INT NOT NULL,
 
 	CONSTRAINT PK_Seleccion PRIMARY KEY (id_seleccion),
@@ -345,9 +349,9 @@ CREATE TABLE Torneo.Sede (
 	id_ciudad INT NOT NULL,
 	nombre_estadio VARCHAR(30) NOT NULL,
 	capacidad INT NOT NULL,
-	latitud DECIMAL(9, 6) NOT NULL,
-	longitud DECIMAL(9, 6) NOT NULL,
-	huso_horario VARCHAR(10) NOT NULL,
+	latitud DECIMAL(9, 6) NULL, -- NULL = pendiente de geolocalizar (lo completa la API Nominatim)
+	longitud DECIMAL(9, 6) NULL,
+	huso_horario VARCHAR(10) NULL, -- NULL = pendiente (lo completa el scraping del fixture o la API de husos horarios)
 
 	CONSTRAINT PK_Sede PRIMARY KEY (id_sede),
     CONSTRAINT FK_Sede_Ciudad FOREIGN KEY (id_ciudad) REFERENCES Participantes.Ciudad(id_ciudad),
@@ -654,6 +658,8 @@ CREATE TABLE Torneo.Staging_fixture (
 );
 GO
 
+-- Staging de estadios: recibe el archivo stadiums.csv (github.com/jfjelstul/worldcup) tal cual viene.
+-- Las 8 primeras columnas coinciden con el archivo; la carga se hace a través de la vista Torneo.vw_Staging_stadiums.
 CREATE TABLE Torneo.Staging_stadiums (
     key_id VARCHAR(100),
     stadium_id VARCHAR(100),
@@ -664,9 +670,13 @@ CREATE TABLE Torneo.Staging_stadiums (
     stadium_wikipedia_link VARCHAR(500),
     city_wikipedia_link VARCHAR(500),
 
-    id_fila INT IDENTITY(1,1) PRIMARY KEY,
-    estado_proceso VARCHAR(20) DEFAULT 'Pendiente',
+    id_fila INT IDENTITY(1,1),
+    estado_proceso VARCHAR(20) NOT NULL CONSTRAINT DF_Staging_Stadiums_Estado DEFAULT 'Pendiente',
     mensaje_error VARCHAR(2000),
-    id_log INT NULL
+    id_log INT NULL,
+
+    CONSTRAINT PK_Staging_Stadiums PRIMARY KEY (id_fila),
+    CONSTRAINT FK_Staging_Stadiums_Log FOREIGN KEY (id_log) REFERENCES Torneo.Log_importacion(id_log),
+    CONSTRAINT CK_Staging_Stadiums_Estado CHECK (estado_proceso IN ('Pendiente', 'Insertado', 'Actualizado', 'Error', 'Duplicado'))
 );
 GO
