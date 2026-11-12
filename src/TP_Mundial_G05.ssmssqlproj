@@ -88,8 +88,8 @@
           <FullPath>10_test_SP_logica_negocio.sql</FullPath>
         </FileNode>
         <FileNode Name="11_SP_Importaciones.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>11_SP_Importaciones.sql</FullPath>
         </FileNode>
