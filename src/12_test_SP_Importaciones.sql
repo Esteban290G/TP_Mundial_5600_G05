@@ -132,7 +132,7 @@ GO
 SELECT id_sede, nombre_estadio, latitud, longitud
 FROM Torneo.Sede;
 
-EXEC Torneo.Actualizar_Coordenadas_Sedes @limite = 5;
+EXEC Torneo.Actualizar_Coordenadas_Sedes @limite = 240;
 
 SELECT id_sede, nombre_estadio, latitud, longitud
 FROM Torneo.Sede;
