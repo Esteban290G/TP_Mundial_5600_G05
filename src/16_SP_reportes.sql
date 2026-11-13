@@ -89,6 +89,46 @@ GO
 EXEC Torneo.Reporte_Tarjetas_Suspensiones;
 
 ------------------------------------------
--- Reporte 3:
+-- Reporte 3: Designaciones arbitrales: partidos dirigidos por cada árbitro, con las amonestaciones/expulsiones que señaló. 
+-- Retorna XML
+
+CREATE OR ALTER PROCEDURE Torneo.Reporte_Designaciones_Arbitrales
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        Arbitro.apellido + ', ' + Arbitro.nombre AS Nombre,
+        Rol.descripcion AS Rol,
+        (
+            SELECT 
+                SL.nombre_seleccion + ' vs ' + SV.nombre_seleccion AS Enfrentamiento,
+                CONVERT(VARCHAR(16), Partido.fecha_hora_local, 120) AS Fecha,
+                COUNT(CASE WHEN TT.descripcion_tarjeta = 'Amarilla' THEN 1 END) AS Amarillas,
+                COUNT(CASE WHEN TT.descripcion_tarjeta = 'Roja' THEN 1 END) AS Rojas
+            FROM Torneo.Designacion_arbitral DA_in
+            INNER JOIN Torneo.Partido AS Partido ON DA_in.id_partido = Partido.id_partido
+            INNER JOIN Participantes.Seleccion SL ON Partido.id_seleccion_local = SL.id_seleccion
+            INNER JOIN Participantes.Seleccion SV ON Partido.id_seleccion_visitante = SV.id_seleccion
+            LEFT JOIN Torneo.Tarjeta T ON Partido.id_partido = T.id_partido
+            LEFT JOIN Torneo.Tipo_tarjeta TT ON T.id_tipo_tarjeta = TT.id_tipo_tarjeta
+            WHERE DA_in.id_arbitro = Arbitro.id_arbitro 
+              AND DA_in.id_rol_arbitro = Rol.id_rol_arbitro
+            GROUP BY 
+                SL.nombre_seleccion, SV.nombre_seleccion, Partido.fecha_hora_local
+            FOR XML RAW('Partido'), TYPE, ELEMENTS
+        ) AS PartidosDirigidos
+    FROM Torneo.Designacion_arbitral DA
+    INNER JOIN Participantes.Arbitro AS Arbitro ON DA.id_arbitro = Arbitro.id_arbitro
+    INNER JOIN Participantes.Rol_arbitro AS Rol ON DA.id_rol_arbitro = Rol.id_rol_arbitro
+    GROUP BY 
+        Arbitro.id_arbitro, Arbitro.apellido, Arbitro.nombre, 
+        Rol.id_rol_arbitro, Rol.descripcion
+    FOR XML RAW('Arbitro'), ROOT('DesignacionesArbitrales'), ELEMENTS;
+END;
+GO
+
+EXEC Torneo.Reporte_Designaciones_Arbitrales;
+GO
 
 ------------------------------------------

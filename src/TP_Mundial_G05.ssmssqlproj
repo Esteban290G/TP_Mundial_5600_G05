@@ -3,7 +3,7 @@
   <Items>
     <LogicalFolder Name="Conexiones" Type="2" Sorted="true">
       <Items>
-        <ConnectionNode Name="(local)\SQLEXPRESS:NAPO\NAPO">
+        <ConnectionNode Name="(local)\SQLEXPRESS:DESKTOP-MNME4H2\Usuario">
           <Created>2026-11-06T22:34:54.4834414-03:00</Created>
           <Type>SQL</Type>
           <Server>(local)\SQLEXPRESS</Server>
@@ -13,6 +13,20 @@
           <LoginTimeout>15</LoginTimeout>
           <TrustServerCertificate>True</TrustServerCertificate>
           <EncryptionOption>True</EncryptionOption>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
+        </ConnectionNode>
+        <ConnectionNode Name="DESKTOP-MNME4H2\SQLEXPRESS:DESKTOP-MNME4H2\Usuario">
+          <Created>2026-11-12T18:26:52.7774276-03:00</Created>
+          <Type>SQL</Type>
+          <Server>DESKTOP-MNME4H2\SQLEXPRESS</Server>
+          <UserName />
+          <Authentication>Autenticación de Windows</Authentication>
+          <InitialDB />
+          <LoginTimeout>15</LoginTimeout>
+          <TrustServerCertificate>True</TrustServerCertificate>
+          <EncryptionOption>False</EncryptionOption>
           <ExecutionTimeout>0</ExecutionTimeout>
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
@@ -34,8 +48,8 @@
           <FullPath>01_tablas_restricciones.sql</FullPath>
         </FileNode>
         <FileNode Name="02_vistas_funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>(local)\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>02_vistas_funciones.sql</FullPath>
         </FileNode>
@@ -64,8 +78,8 @@
           <FullPath>06_SP_logica_negocio.sql</FullPath>
         </FileNode>
         <FileNode Name="07_test_SP_Altas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>(local)\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>07_test_SP_Altas.sql</FullPath>
         </FileNode>
@@ -88,28 +102,40 @@
           <FullPath>10_test_SP_logica_negocio.sql</FullPath>
         </FileNode>
         <FileNode Name="11_SP_Importaciones.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>11_SP_Importaciones.sql</FullPath>
         </FileNode>
         <FileNode Name="12_test_SP_Importaciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>(local)\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>12_test_SP_Importaciones.sql</FullPath>
         </FileNode>
         <FileNode Name="13_SP_Importaciones_XML_APIs.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>(local)\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>13_SP_Importaciones_XML_APIs.sql</FullPath>
         </FileNode>
         <FileNode Name="14_test_SP_Importaciones_XML_APIs.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>(local)\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>14_test_SP_Importaciones_XML_APIs.sql</FullPath>
+        </FileNode>
+        <FileNode Name="15_cargar_datos_reportes.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>15_cargar_datos_reportes.sql</FullPath>
+        </FileNode>
+        <FileNode Name="16_SP_reportes.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>16_SP_reportes.sql</FullPath>
         </FileNode>
       </Items>
     </LogicalFolder>
