@@ -111,6 +111,30 @@
           <AssociatedConnUserName />
           <FullPath>14_test_SP_Importaciones_XML_APIs.sql</FullPath>
         </FileNode>
+        <FileNode Name="15_cargar_datos_reportes.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>15_cargar_datos_reportes.sql</FullPath>
+        </FileNode>
+        <FileNode Name="17_carga_datos_seccion_IV.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>17_carga_datos_seccion_IV.sql</FullPath>
+        </FileNode>
+        <FileNode Name="18_SP_reportes_2.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>18_SP_reportes_2.sql</FullPath>
+        </FileNode>
+        <FileNode Name="19_test_reportes_2.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>19_test_reportes_2.sql</FullPath>
+        </FileNode>
       </Items>
     </LogicalFolder>
     <LogicalFolder Name="Varios" Type="3" Sorted="true">
