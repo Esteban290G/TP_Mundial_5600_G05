@@ -27,7 +27,8 @@
 ----- Sin clave ni límite de uso publicado (archivo de unos 800 KB).
 --- Banco Mundial (https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.CD)
 ----- PBI per cápita en USD corrientes (proxy de poder adquisitivo para la publicidad).
------ Sin clave. Máximo 32.500 registros por página; se pide el último valor disponible (mrnev=1).
+----- Sin clave. Máximo 32.500 registros por página; se piden los últimos N valores de cada país (mrnev=N) y se
+----- guardan en Participantes.Historial_pbi_pais (un registro por país y año: información histórica).
 --- timeapi.io (https://timeapi.io/api/timezone/coordinate)
 ----- Huso horario a partir de coordenadas: de cada sede (coordenadas de Nominatim) y de cada país (su capital).
 ----- Sin clave. Límite no publicado: se hace una consulta por segundo.
@@ -235,22 +236,39 @@ GO
 ------------------------------------------
 -- Procedimiento: Participantes.Importar_API_PBI
 -- Descripción: Consulta la API del Banco Mundial (indicador NY.GDP.PCAP.CD, PBI per cápita en USD corrientes)
---              y actualiza Participantes.Pais.pbi_per_capita con el último valor disponible de cada país
---              (se vincula por código ISO alfa-3). Es la base del criterio de poder adquisitivo de la publicidad.
+--              y guarda los últimos @cantidad_anios valores publicados de cada país (se vincula por código ISO alfa-3).
+--              Información histórica: hace un upsert en Participantes.Historial_pbi_pais con clave (país, año), así
+--              una reimportación agrega los años nuevos y corrige los revisados sin borrar los anteriores.
+--              Después deja en Participantes.Pais.pbi_per_capita el valor del año más reciente del historial, que es
+--              la base del criterio de poder adquisitivo de la publicidad.
 --              Los registros de agregados regionales (ej: 'AFE', 'WLD') o de países que no están en la base se
---              informan como 'Omitido'. Los países sin dato se informan como 'Sin dato' y no se modifican.
--- Validaciones: Respuesta que no es JSON o sin la lista de datos (la API devuelve un mensaje de error) y valores negativos.
+--              informan como 'Omitido'. Los registros sin valor se informan como 'Sin dato'.
+-- Parámetros: @cantidad_anios: cantidad de años por país a traer (1 a 20; por defecto 5).
+-- Validaciones: Cantidad de años fuera de rango, respuesta que no es JSON o sin la lista de datos (la API devuelve
+--               un mensaje de error), año inválido, valor negativo y registros repetidos (mismo país y año).
 
 CREATE OR ALTER PROCEDURE Participantes.Importar_API_PBI
+    @cantidad_anios INT = 5
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @url VARCHAR(2000) = 'https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.CD?format=json&mrnev=1&per_page=1000';
+    DECLARE @url VARCHAR(2000);
     DECLARE @fuente VARCHAR(255) = 'API Banco Mundial - PBI per cápita (NY.GDP.PCAP.CD)';
     DECLARE @json NVARCHAR(MAX);
     DECLARE @MensajeError NVARCHAR(1000);
-    DECLARE @total INT = 0, @actualizados INT = 0, @omitidos INT = 0, @sin_dato INT = 0, @con_error INT = 0;
+    DECLARE @total INT = 0, @insertados INT = 0, @actualizados INT = 0, @omitidos INT = 0,
+            @sin_dato INT = 0, @con_error INT = 0, @duplicados INT = 0;
+
+    IF (@cantidad_anios IS NULL OR @cantidad_anios NOT BETWEEN 1 AND 20)
+    BEGIN
+        ;THROW 50001, '- La cantidad de años debe estar entre 1 y 20. ', 1;
+        RETURN;
+    END
+
+    -- mrnev = los N valores no vacíos más recientes de cada país; per_page alcanza para ~270 códigos x 20 años
+    SET @url = 'https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.CD?format=json&mrnev='
+             + CAST(@cantidad_anios AS VARCHAR(2)) + '&per_page=6000';
 
     EXEC Torneo.Consultar_API @url = @url, @respuesta = @json OUTPUT;
 
@@ -265,15 +283,17 @@ BEGIN
         nro INT IDENTITY(1,1) PRIMARY KEY,
         codigo_iso NVARCHAR(10) COLLATE DATABASE_DEFAULT NULL,
         nombre NVARCHAR(200) COLLATE DATABASE_DEFAULT NULL,
-        anio NVARCHAR(10) COLLATE DATABASE_DEFAULT NULL,
+        anio_txt NVARCHAR(10) COLLATE DATABASE_DEFAULT NULL,
+        anio SMALLINT NULL,
         valor FLOAT NULL,
         id_pais INT NULL,
+        id_historial_existente INT NULL,
         estado VARCHAR(20) COLLATE DATABASE_DEFAULT NULL,
         mensaje_error VARCHAR(500) COLLATE DATABASE_DEFAULT NULL
     );
 
-    INSERT INTO #pbi (codigo_iso, nombre, anio, valor)
-    SELECT NULLIF(LTRIM(RTRIM(iso3)), ''), nombre, anio, valor
+    INSERT INTO #pbi (codigo_iso, nombre, anio_txt, anio, valor)
+    SELECT NULLIF(LTRIM(RTRIM(iso3)), ''), nombre, anio, TRY_CAST(anio AS SMALLINT), valor
     FROM OPENJSON(@json, '$[1]') WITH (
         iso3 NVARCHAR(10) '$.countryiso3code',
         nombre NVARCHAR(200) '$.country.value',
@@ -291,33 +311,77 @@ BEGIN
     UPDATE #pbi
     SET estado = CASE WHEN id_pais IS NULL THEN 'Omitido'
                       WHEN valor IS NULL THEN 'Sin dato'
-                      WHEN valor < 0 THEN 'Error'
-                      ELSE 'Actualizado' END,
+                      WHEN anio IS NULL OR anio NOT BETWEEN 1960 AND 2100 OR valor < 0 THEN 'Error' END,
         mensaje_error = CASE WHEN id_pais IS NULL THEN '- No es un país de la base (agregado regional o país no importado). '
-                             WHEN valor IS NULL THEN '- El Banco Mundial no publica el indicador para este país. '
-                             WHEN valor < 0 THEN '- Valor negativo. ' END;
+                             WHEN valor IS NULL THEN '- El Banco Mundial no publica el indicador para este país y año. '
+                             ELSE NULLIF(CONCAT(
+                                 CASE WHEN anio IS NULL OR anio NOT BETWEEN 1960 AND 2100
+                                      THEN '- Año inválido: "' + ISNULL(anio_txt, '') + '". ' END,
+                                 CASE WHEN valor < 0 THEN '- Valor negativo. ' END), '') END;
+
+    -- Mismo país y año repetidos en la respuesta: se toma el primero
+    ;WITH repetidos AS (
+        SELECT estado, mensaje_error, ROW_NUMBER() OVER (PARTITION BY id_pais, anio ORDER BY nro) AS rn
+        FROM #pbi
+        WHERE estado IS NULL
+    )
+    UPDATE repetidos
+    SET estado = 'Duplicado', mensaje_error = '- País y año repetidos en la respuesta. '
+    WHERE rn > 1;
+
+    UPDATE B
+    SET id_historial_existente = H.id_historial_pbi
+    FROM #pbi B
+    INNER JOIN Participantes.Historial_pbi_pais H ON H.id_pais = B.id_pais AND H.anio = B.anio
+    WHERE B.estado IS NULL;
+
+    UPDATE #pbi
+    SET estado = CASE WHEN id_historial_existente IS NULL THEN 'Insertado' ELSE 'Actualizado' END
+    WHERE estado IS NULL;
 
     SELECT
+        @insertados = SUM(CASE WHEN estado = 'Insertado' THEN 1 ELSE 0 END),
         @actualizados = SUM(CASE WHEN estado = 'Actualizado' THEN 1 ELSE 0 END),
         @omitidos = SUM(CASE WHEN estado = 'Omitido' THEN 1 ELSE 0 END),
         @sin_dato = SUM(CASE WHEN estado = 'Sin dato' THEN 1 ELSE 0 END),
-        @con_error = SUM(CASE WHEN estado = 'Error' THEN 1 ELSE 0 END)
+        @con_error = SUM(CASE WHEN estado = 'Error' THEN 1 ELSE 0 END),
+        @duplicados = SUM(CASE WHEN estado = 'Duplicado' THEN 1 ELSE 0 END)
     FROM #pbi;
 
     BEGIN TRY
         BEGIN TRANSACTION;
 
         INSERT INTO Torneo.Log_importacion (nombre_archivo_o_fuente, fecha_hora_ejecucion, registros_procesados, registros_con_error, estado)
-        VALUES (@fuente, GETDATE(), @total, @con_error + @sin_dato,
-                CASE WHEN @actualizados = 0 THEN 'Sin registros válidos'
-                     WHEN @con_error + @sin_dato = 0 THEN 'Completado'
+        VALUES (@fuente, GETDATE(), @total, @con_error + @sin_dato + @duplicados,
+                CASE WHEN @insertados + @actualizados = 0 THEN 'Sin registros válidos'
+                     WHEN @con_error + @sin_dato + @duplicados = 0 THEN 'Completado'
                      ELSE 'Completado con errores' END);
 
-        UPDATE P
-        SET pbi_per_capita = ROUND(B.valor, 2)
-        FROM Participantes.Pais P
-        INNER JOIN #pbi B ON P.id_pais = B.id_pais
+        -- Años ya registrados: se actualiza el valor (el Banco Mundial revisa cifras de años anteriores)
+        UPDATE H
+        SET pbi_per_capita = ROUND(B.valor, 2),
+            fecha_actualizacion = GETDATE()
+        FROM Participantes.Historial_pbi_pais H
+        INNER JOIN #pbi B ON H.id_historial_pbi = B.id_historial_existente
         WHERE B.estado = 'Actualizado';
+
+        -- Años nuevos: se agregan sin tocar los anteriores
+        INSERT INTO Participantes.Historial_pbi_pais (id_pais, anio, pbi_per_capita)
+        SELECT id_pais, anio, ROUND(valor, 2)
+        FROM #pbi
+        WHERE estado = 'Insertado';
+
+        -- Valor vigente del país = el del año más reciente de su historial
+        ;WITH ultimo AS (
+            SELECT id_pais, pbi_per_capita,
+                   ROW_NUMBER() OVER (PARTITION BY id_pais ORDER BY anio DESC) AS rn
+            FROM Participantes.Historial_pbi_pais
+            WHERE id_pais IN (SELECT id_pais FROM #pbi WHERE estado IN ('Insertado', 'Actualizado'))
+        )
+        UPDATE P
+        SET pbi_per_capita = U.pbi_per_capita
+        FROM Participantes.Pais P
+        INNER JOIN ultimo U ON U.id_pais = P.id_pais AND U.rn = 1;
 
         COMMIT TRANSACTION;
     END TRY
@@ -333,13 +397,14 @@ BEGIN
         ;THROW;
     END CATCH;
 
-    PRINT CONCAT('Banco Mundial: ', @total, ' registros, ', @actualizados, ' países actualizados, ',
-                 @sin_dato, ' sin dato, ', @omitidos, ' omitidos y ', @con_error, ' con error.');
+    PRINT CONCAT('Banco Mundial: ', @total, ' registros (país y año), ', @insertados, ' insertados en el historial, ',
+                 @actualizados, ' actualizados, ', @sin_dato, ' sin dato, ', @omitidos, ' omitidos, ',
+                 @duplicados, ' duplicados y ', @con_error, ' con error.');
 
-    SELECT nro, estado, codigo_iso, nombre, anio, valor, ISNULL(mensaje_error, '') AS detalle
+    SELECT nro, estado, codigo_iso, nombre, anio_txt AS anio, valor, ISNULL(mensaje_error, '') AS detalle
     FROM #pbi
     WHERE estado <> 'Omitido'
-    ORDER BY CASE estado WHEN 'Actualizado' THEN 1 ELSE 0 END, codigo_iso;
+    ORDER BY CASE WHEN estado IN ('Insertado', 'Actualizado') THEN 1 ELSE 0 END, codigo_iso, anio DESC;
 END;
 GO
 
