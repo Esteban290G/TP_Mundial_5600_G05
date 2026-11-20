@@ -122,3 +122,33 @@ GO
 -- Resultado esperado: error '- La fase indicada no existe. - El grupo indicado no existe.'
 EXEC Torneo.Reporte_Resultados @id_fase = -1, @nombre_grupo = 'Z';
 GO
+
+------------------------------------------
+-- PRUEBAS: Torneo.Reporte_Goleadores
+------------------------------------------
+
+-- Test 15: Goleadores por selección, fase y ranking general del torneo.
+-- Resultado esperado: primer resultado con goles convertidos por jugador en cada fase junto a su total acumulado;
+--                     segundo resultado con la tabla general de goleadores del torneo ordenada de mayor a menor.
+EXEC Torneo.Reporte_Goleadores;
+GO
+
+------------------------------------------
+-- PRUEBAS: Torneo.Reporte_Tarjetas_Suspensiones
+------------------------------------------
+
+-- Test 16: Tarjetas amarillas y rojas por selección y jugador, con suspensiones activas.
+-- Resultado esperado: listado de jugadores amonestados o expulsados con sus totales de amarillas y rojas,
+--                     cantidad de fechas pendientes de cumplimiento y motivo de las suspensiones activas.
+EXEC Torneo.Reporte_Tarjetas_Suspensiones;
+GO
+
+------------------------------------------
+-- PRUEBAS: Torneo.Reporte_Designaciones_Arbitrales (XML)
+------------------------------------------
+
+-- Test 17: Designaciones arbitrales con partidos dirigidos y tarjetas señaladas (en XML).
+-- Resultado esperado: un XML <DesignacionesArbitrales> con un nodo <Arbitro> por árbitro y rol, y sus
+--                     <PartidosDirigidos> anidados (las amarillas y rojas se muestran para el Árbitro Principal).
+EXEC Torneo.Reporte_Designaciones_Arbitrales;
+GO
