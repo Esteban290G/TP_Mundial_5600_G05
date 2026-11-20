@@ -19,26 +19,55 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    --Detalle por selección y fase.
     SELECT 
         S.nombre_seleccion AS Seleccion,
         F.nombre_fase AS Fase,
         J.apellido + ', ' + J.nombre AS Jugador,
-        COUNT(G.id_gol) AS Goles_Convertidos
+        COUNT(G.id_gol) AS Goles_En_Fase,
+        TotalTorneo.Goles_Torneo AS Goles_Total_Jugador
     FROM Torneo.Gol G
     INNER JOIN Torneo.Partido P ON G.id_partido = P.id_partido
     INNER JOIN Torneo.Fase F ON P.id_fase = F.id_fase
     INNER JOIN Participantes.Convocatoria C ON G.id_convocatoria_autor = C.id_convocatoria
     INNER JOIN Participantes.Jugador J ON C.id_jugador = J.id_jugador
     INNER JOIN Participantes.Seleccion S ON C.id_seleccion = S.id_seleccion
+    INNER JOIN (
+        SELECT 
+            id_convocatoria_autor,
+            COUNT(id_gol) AS Goles_Torneo
+        FROM Torneo.Gol
+        GROUP BY id_convocatoria_autor
+    ) AS TotalTorneo ON C.id_convocatoria = TotalTorneo.id_convocatoria_autor
     GROUP BY 
+        C.id_convocatoria,
         S.nombre_seleccion, 
         F.nombre_fase, 
         J.apellido, 
-        J.nombre
+        J.nombre,
+        TotalTorneo.Goles_Torneo
     ORDER BY 
         S.nombre_seleccion ASC,
         F.nombre_fase ASC,
-        Goles_Convertidos DESC;
+        Goles_En_Fase DESC;
+
+    -- Tabla general de goleadores del torneo.
+    SELECT 
+        J.apellido + ', ' + J.nombre AS Jugador,
+        S.nombre_seleccion AS Seleccion,
+        COUNT(G.id_gol) AS Total_Goles_Torneo
+    FROM Torneo.Gol G
+    INNER JOIN Participantes.Convocatoria C ON G.id_convocatoria_autor = C.id_convocatoria
+    INNER JOIN Participantes.Jugador J ON C.id_jugador = J.id_jugador
+    INNER JOIN Participantes.Seleccion S ON C.id_seleccion = S.id_seleccion
+    GROUP BY 
+        C.id_convocatoria,
+        J.apellido, 
+        J.nombre, 
+        S.nombre_seleccion
+    ORDER BY 
+        Total_Goles_Torneo DESC,
+        Jugador ASC;
 END;
 GO
 
@@ -90,7 +119,7 @@ EXEC Torneo.Reporte_Tarjetas_Suspensiones;
 
 ------------------------------------------
 -- Reporte 3: Designaciones arbitrales: partidos dirigidos por cada árbitro, con las amonestaciones/expulsiones que señaló. 
--- Retorna XML
+-- Retorna XML: Solamente tarjetas del Árbitro Principal.
 
 CREATE OR ALTER PROCEDURE Torneo.Reporte_Designaciones_Arbitrales
 AS
@@ -104,9 +133,10 @@ BEGIN
             SELECT 
                 SL.nombre_seleccion + ' vs ' + SV.nombre_seleccion AS Enfrentamiento,
                 CONVERT(VARCHAR(16), Partido.fecha_hora_local, 120) AS Fecha,
-                COUNT(CASE WHEN TT.descripcion_tarjeta = 'Amarilla' THEN 1 END) AS Amarillas,
-                COUNT(CASE WHEN TT.descripcion_tarjeta = 'Roja' THEN 1 END) AS Rojas
+                COUNT(CASE WHEN Rol_in.descripcion LIKE '%Principal%' AND TT.descripcion_tarjeta = 'Amarilla' THEN 1 END) AS Amarillas,
+                COUNT(CASE WHEN Rol_in.descripcion LIKE '%Principal%' AND TT.descripcion_tarjeta = 'Roja' THEN 1 END) AS Rojas
             FROM Torneo.Designacion_arbitral DA_in
+            INNER JOIN Participantes.Rol_arbitro AS Rol_in ON DA_in.id_rol_arbitro = Rol_in.id_rol_arbitro
             INNER JOIN Torneo.Partido AS Partido ON DA_in.id_partido = Partido.id_partido
             INNER JOIN Participantes.Seleccion SL ON Partido.id_seleccion_local = SL.id_seleccion
             INNER JOIN Participantes.Seleccion SV ON Partido.id_seleccion_visitante = SV.id_seleccion
@@ -115,7 +145,7 @@ BEGIN
             WHERE DA_in.id_arbitro = Arbitro.id_arbitro 
               AND DA_in.id_rol_arbitro = Rol.id_rol_arbitro
             GROUP BY 
-                SL.nombre_seleccion, SV.nombre_seleccion, Partido.fecha_hora_local
+                Partido.id_partido, SL.nombre_seleccion, SV.nombre_seleccion, Partido.fecha_hora_local
             FOR XML RAW('Partido'), TYPE, ELEMENTS
         ) AS PartidosDirigidos
     FROM Torneo.Designacion_arbitral DA
@@ -127,8 +157,3 @@ BEGIN
     FOR XML RAW('Arbitro'), ROOT('DesignacionesArbitrales'), ELEMENTS;
 END;
 GO
-
-EXEC Torneo.Reporte_Designaciones_Arbitrales;
-GO
-
-------------------------------------------
