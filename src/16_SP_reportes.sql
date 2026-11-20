@@ -115,8 +115,6 @@ BEGIN
 END;
 GO
 
-EXEC Torneo.Reporte_Tarjetas_Suspensiones;
-
 ------------------------------------------
 -- Reporte 3: Designaciones arbitrales: partidos dirigidos por cada árbitro, con las amonestaciones/expulsiones que señaló. 
 -- Retorna XML: Solamente tarjetas del Árbitro Principal.
