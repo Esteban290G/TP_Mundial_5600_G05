@@ -23,10 +23,10 @@
 --   4. Inglaterra - Croacia (20:00 UTC) cae en prime time en más de cuatro mercados candidatos (España, Portugal,
 --      Francia, Italia, Alemania, Austria, Países Bajos, Inglaterra): Asignar_Publicidad_Partido prioriza 4 piezas.
 --   5. Designación arbitral rechazada por conflicto de nacionalidad (árbitro argentino en Argentina - Argelia).
---   6. Importación con errores parciales (stadiums_prueba_errores.csv; también en los scripts 12 y 14).
+--   6. Importación con errores parciales (stadiums_prueba_errores.csv; también en los scripts 12).
 --
 -- Es independiente de las importaciones: si los países, sedes, selecciones o partidos ya existen (por ejemplo,
--- porque se ejecutó el script 14 con el XML de Wikipedia) los reutiliza; si no, los crea con los mismos datos.
+-- porque se ejecutó el script 12 con el XML de Wikipedia) los reutiliza; si no, los crea con los mismos datos.
 -- Se puede ejecutar más de una vez: lo ya cargado no se duplica (los partidos que ya tienen planilla se saltean).
 -- Los nombres de jugadores, cuerpos técnicos, árbitros y anunciantes son ficticios. Los partidos, sedes, horarios
 -- y resultados son los reales (Wikipedia). Los PBI y husos que se usan al crear un país son aproximados.
@@ -138,10 +138,10 @@ BEGIN
 END
 
 -- Origen de los partidos que crea este script (Torneo.Partido exige el registro de importación de origen)
-IF NOT EXISTS (SELECT 1 FROM Torneo.Log_importacion WHERE nombre_archivo_o_fuente = 'Carga de datos de prueba (script 17)')
+IF NOT EXISTS (SELECT 1 FROM Torneo.Log_importacion WHERE nombre_archivo_o_fuente = 'Carga de datos de prueba (script 13)')
 BEGIN
     DECLARE @ahora DATETIME = DATEADD(SECOND, -1, GETDATE());
-    EXEC Torneo.Alta_Log_importacion @nombre_archivo_o_fuente = 'Carga de datos de prueba (script 17)',
+    EXEC Torneo.Alta_Log_importacion @nombre_archivo_o_fuente = 'Carga de datos de prueba (script 13)',
          @fecha_hora_ejecucion = @ahora, @registros_procesados = 32, @registros_con_error = 0, @estado = 'Completado';
 END
 GO
@@ -477,7 +477,7 @@ DECLARE @i INT = 1, @n INT = (SELECT MAX(nro) FROM #partidos);
 DECLARE @id_partido INT, @id_fase INT, @id_sede INT, @local INT, @visitante INT, @fecha_local DATETIME, @fecha_utc DATETIME,
         @gl TINYINT, @gv TINYINT, @asistencia INT, @capacidad INT;
 DECLARE @id_log INT = (SELECT TOP 1 id_log FROM Torneo.Log_importacion
-                       WHERE nombre_archivo_o_fuente = 'Carga de datos de prueba (script 17)' ORDER BY id_log);
+                       WHERE nombre_archivo_o_fuente = 'Carga de datos de prueba (script 13)' ORDER BY id_log);
 
 WHILE @i <= @n
 BEGIN
@@ -523,7 +523,7 @@ GO
 
 ------------------------------------------
 -- 6. CLUBES, JUGADORES Y CONVOCATORIAS (23 por selección)
--- Si una selección ya tiene convocados (por ejemplo los del script 15), se completa hasta llegar a
+-- Si una selección ya tiene convocados, se completa hasta llegar a
 -- 3 arqueros, 8 defensores, 7 mediocampistas y 5 delanteros. Los dorsales siguen la numeración habitual
 -- de cada puesto. Los nombres son ficticios, armados con apellidos y nombres frecuentes de cada país.
 ------------------------------------------

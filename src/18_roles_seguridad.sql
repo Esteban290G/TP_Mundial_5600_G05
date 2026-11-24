@@ -296,7 +296,7 @@ GO
 ------------------------------------------
 -- EJECUCIÓN: roles y un usuario de prueba por rol
 -- Los logins se crean con autenticación de SQL Server. Si la instancia solo admite autenticación de Windows, el
--- login se crea igual pero no puede conectarse; las pruebas (scripts 23 a 26) usan EXECUTE AS USER, que funciona
+-- login se crea igual pero no puede conectarse; las pruebas (scripts 19 a 22) usan EXECUTE AS USER, que funciona
 -- en ambos casos.
 ------------------------------------------
 
