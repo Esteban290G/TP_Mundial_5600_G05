@@ -23,7 +23,7 @@
 --   4. Inglaterra - Croacia (20:00 UTC) cae en prime time en más de cuatro mercados candidatos (España, Portugal,
 --      Francia, Italia, Alemania, Austria, Países Bajos, Inglaterra): Asignar_Publicidad_Partido prioriza 4 piezas.
 --   5. Designación arbitral rechazada por conflicto de nacionalidad (árbitro argentino en Argentina - Argelia).
---   6. Importación con errores parciales (stadiums_prueba_errores.csv; también en los scripts 12).
+--   6. Importación con errores parciales (stadiums_prueba_errores.csv; también en el script 12).
 --
 -- Es independiente de las importaciones: si los países, sedes, selecciones o partidos ya existen (por ejemplo,
 -- porque se ejecutó el script 12 con el XML de Wikipedia) los reutiliza; si no, los crea con los mismos datos.
@@ -138,10 +138,10 @@ BEGIN
 END
 
 -- Origen de los partidos que crea este script (Torneo.Partido exige el registro de importación de origen)
-IF NOT EXISTS (SELECT 1 FROM Torneo.Log_importacion WHERE nombre_archivo_o_fuente = 'Carga de datos de prueba (script 13)')
+IF NOT EXISTS (SELECT 1 FROM Torneo.Log_importacion WHERE nombre_archivo_o_fuente = 'Carga de datos de prueba (script 14)')
 BEGIN
     DECLARE @ahora DATETIME = DATEADD(SECOND, -1, GETDATE());
-    EXEC Torneo.Alta_Log_importacion @nombre_archivo_o_fuente = 'Carga de datos de prueba (script 13)',
+    EXEC Torneo.Alta_Log_importacion @nombre_archivo_o_fuente = 'Carga de datos de prueba (script 14)',
          @fecha_hora_ejecucion = @ahora, @registros_procesados = 32, @registros_con_error = 0, @estado = 'Completado';
 END
 GO
@@ -477,7 +477,7 @@ DECLARE @i INT = 1, @n INT = (SELECT MAX(nro) FROM #partidos);
 DECLARE @id_partido INT, @id_fase INT, @id_sede INT, @local INT, @visitante INT, @fecha_local DATETIME, @fecha_utc DATETIME,
         @gl TINYINT, @gv TINYINT, @asistencia INT, @capacidad INT;
 DECLARE @id_log INT = (SELECT TOP 1 id_log FROM Torneo.Log_importacion
-                       WHERE nombre_archivo_o_fuente = 'Carga de datos de prueba (script 13)' ORDER BY id_log);
+                       WHERE nombre_archivo_o_fuente = 'Carga de datos de prueba (script 14)' ORDER BY id_log);
 
 WHILE @i <= @n
 BEGIN
