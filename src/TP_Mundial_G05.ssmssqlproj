@@ -159,6 +159,18 @@
           <AssociatedConnUserName />
           <FullPath>22_test_usuario_consulta.sql</FullPath>
         </FileNode>
+        <FileNode Name="23_SP_consultas_torneo.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>23_SP_consultas_torneo.sql</FullPath>
+        </FileNode>
+        <FileNode Name="24_test_consultas_torneo.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-MNME4H2\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-MNME4H2\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>24_test_consultas_torneo.sql</FullPath>
+        </FileNode>
       </Items>
     </LogicalFolder>
     <LogicalFolder Name="Varios" Type="3" Sorted="true">
