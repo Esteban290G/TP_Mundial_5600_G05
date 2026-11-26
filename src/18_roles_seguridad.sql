@@ -95,6 +95,11 @@ BEGIN
         IF OBJECT_ID('Torneo.Reporte_Resultados', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Reporte_Resultados TO rol_cargador_resultados;
         IF OBJECT_ID('Participantes.Consultar_Jugadores', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Participantes.Consultar_Jugadores TO rol_cargador_resultados;
 
+        -- Consultas del torneo (script 23), si ya existen
+        IF OBJECT_ID('Torneo.Consultar_Fixture', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Consultar_Fixture TO rol_cargador_resultados;
+        IF OBJECT_ID('Torneo.Consultar_Historial_Titularidad', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Consultar_Historial_Titularidad TO rol_cargador_resultados;
+        IF OBJECT_ID('Torneo.Consultar_Equipo_En_Cancha', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Consultar_Equipo_En_Cancha TO rol_cargador_resultados;
+
         -- Restricciones
         DENY INSERT, UPDATE, DELETE ON SCHEMA::Torneo TO rol_cargador_resultados;
         DENY INSERT, UPDATE, DELETE ON SCHEMA::Participantes TO rol_cargador_resultados;
@@ -124,7 +129,7 @@ BEGIN
         DENY SELECT ON OBJECT::Participantes.Integrante_cuerpo_tecnico TO rol_gestor_publicidad;
 
         ------------------------------------------
-        -- rol_consulta: solo los reportes de la Entrega 7
+        -- rol_consulta: los reportes de la Entrega 7 y las consultas del torneo
         IF OBJECT_ID('Torneo.Reporte_Goleadores', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Reporte_Goleadores TO rol_consulta;
         IF OBJECT_ID('Torneo.Reporte_Tarjetas_Suspensiones', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Reporte_Tarjetas_Suspensiones TO rol_consulta;
         IF OBJECT_ID('Torneo.Reporte_Designaciones_Arbitrales', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Reporte_Designaciones_Arbitrales TO rol_consulta;
@@ -132,6 +137,12 @@ BEGIN
         IF OBJECT_ID('Publicidad.Reporte_Ocupacion_Publicitaria', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Publicidad.Reporte_Ocupacion_Publicitaria TO rol_consulta;
         IF OBJECT_ID('Publicidad.Reporte_Matriz_Prime_Time', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Publicidad.Reporte_Matriz_Prime_Time TO rol_consulta;
         IF OBJECT_ID('Participantes.Reporte_Selecciones_Plantillas', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Participantes.Reporte_Selecciones_Plantillas TO rol_consulta;
+
+        -- Consultas del torneo (script 23), si ya existen
+        IF OBJECT_ID('Torneo.Consultar_Fixture', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Consultar_Fixture TO rol_consulta;
+        IF OBJECT_ID('Torneo.Consultar_Historial_Titularidad', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Consultar_Historial_Titularidad TO rol_consulta;
+        IF OBJECT_ID('Torneo.Consultar_Equipo_En_Cancha', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Consultar_Equipo_En_Cancha TO rol_consulta;
+        IF OBJECT_ID('Torneo.Consultar_Historial_Arbitro', 'P') IS NOT NULL GRANT EXECUTE ON OBJECT::Torneo.Consultar_Historial_Arbitro TO rol_consulta;
 
         -- La matriz de prime time arma su consulta con SQL dinámico, que no usa el encadenamiento de propiedad:
         -- necesita lectura sobre estas tablas (sin datos personales) y sobre la función de mercados

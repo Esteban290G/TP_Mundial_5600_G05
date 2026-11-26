@@ -431,7 +431,11 @@ GO
 ------------------------------------------
 -- PERMISOS PARA LOS ROLES DE SEGURIDAD (script 18)
 -- rol_administrador hereda EXECUTE automáticamente por tener CONTROL ON SCHEMA::Torneo.
+-- Si los roles todavía no existen, los permisos los asigna Seguridad.Configurar_Roles al ejecutar el script 18.
 ------------------------------------------
+
+IF DATABASE_PRINCIPAL_ID('rol_consulta') IS NULL OR DATABASE_PRINCIPAL_ID('rol_cargador_resultados') IS NULL
+    PRINT 'Los roles todavía no existen: los permisos sobre estas consultas se asignan al ejecutar el script 18.';
 
 IF DATABASE_PRINCIPAL_ID('rol_consulta') IS NOT NULL
 BEGIN
