@@ -156,6 +156,18 @@
           <AssociatedConnUserName />
           <FullPath>24_test_consultas_torneo.sql</FullPath>
         </FileNode>
+        <FileNode Name="25_vistas_BI.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>25_vistas_BI.sql</FullPath>
+        </FileNode>
+        <FileNode Name="26_test_vistas_BI.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>26_test_vistas_BI.sql</FullPath>
+        </FileNode>
       </Items>
     </LogicalFolder>
     <LogicalFolder Name="Varios" Type="3" Sorted="true">
