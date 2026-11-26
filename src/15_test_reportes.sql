@@ -5,8 +5,8 @@
 -- Gonzalez Esteban Gabriel 42888511
 -- Vázquez Nahuel Domiciano 35756270
 --
--- Pruebas de los reportes de la Entrega 7 (segunda parte, script 18)
--- Requiere haber ejecutado la carga de datos de prueba (script 17).
+-- Pruebas de los reportes de la Entrega 7 (script 13)
+-- Requiere haber ejecutado la carga de datos de prueba (script 14).
 ------------------------------------------
 
 USE COM5600_G05;
@@ -63,7 +63,7 @@ GO
 
 -- Test 07: Todas las selecciones.
 -- Resultado esperado: un XML <selecciones> con un nodo <seleccion> por selección, su cuerpo técnico y el vector
---                     <convocados> (dorsal, nombre, posición y club). Las 16 selecciones del script 17 tienen 23.
+--                     <convocados> (dorsal, nombre, posición y club). Las 16 selecciones del script 14 tienen 23.
 EXEC Participantes.Reporte_Selecciones_Plantillas;
 GO
 

@@ -22,11 +22,11 @@
 --   - Salvo el administrador, nadie escribe directamente en las tablas: INSERT, UPDATE y DELETE quedan denegados y
 --     las altas, bajas y modificaciones se hacen con los SP (que acceden a las tablas por encadenamiento de propiedad).
 --   - Las tablas con datos personales (Jugador, Arbitro, Integrante_cuerpo_tecnico) no se pueden leer directamente
---     salvo el administrador. Los datos cifrados se consultan con los SP de consulta del script 20 y la frase clave.
+--     salvo el administrador. Los datos cifrados se consultan con los SP de consulta del script 16 y la frase clave.
 --   - La creación de logins, la importación de archivos (BULK INSERT) y el consumo de APIs (Ole Automation) requieren
 --     permisos de servidor: los ejecuta el DBA (sysadmin), no estos roles.
 --
--- Se ejecuta después de los scripts 00 a 21. Los usuarios de prueba se crean al final de este script.
+-- Se ejecuta después de los scripts 00 a 17. Los usuarios de prueba se crean al final de este script.
 ------------------------------------------
 
 USE COM5600_G05;
@@ -296,7 +296,7 @@ GO
 ------------------------------------------
 -- EJECUCIÓN: roles y un usuario de prueba por rol
 -- Los logins se crean con autenticación de SQL Server. Si la instancia solo admite autenticación de Windows, el
--- login se crea igual pero no puede conectarse; las pruebas (scripts 23 a 26) usan EXECUTE AS USER, que funciona
+-- login se crea igual pero no puede conectarse; las pruebas (scripts 19 a 22) usan EXECUTE AS USER, que funciona
 -- en ambos casos.
 ------------------------------------------
 

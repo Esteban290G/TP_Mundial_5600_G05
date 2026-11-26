@@ -17,7 +17,6 @@
 --   - Denegado: SQL Server rechazó la operación por permisos (errores 229, 230, 262, 297, 300, 15151 y 15247).
 -- Las operaciones que modifican datos se hacen dentro de una transacción que se deshace (ROLLBACK), así la prueba
 -- no cambia la base. Al final se muestra el cuadro de resultados: la columna "coincide" debe ser 'Sí' en todas.
--- Requiere haber ejecutado los scripts 00 a 22 (datos del script 17 y usuarios del script 22).
 ------------------------------------------
 
 USE COM5600_G05;
